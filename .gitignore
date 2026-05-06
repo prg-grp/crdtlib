@@ -1,0 +1,8 @@
+.vscode
+.idea
+.direnv
+result
+build
+.lake
+target
+.DS_Store
