@@ -30,7 +30,30 @@ def associate [PartialOrder τ] (κ : Type*) [DecidableEq κ] [Hashable κ]
       foldKeys op acmon init lift := init -- TODO
       foldValues op acmon init lift := init -- TODO
     }
-    commutative e₁ e₂ con := by sorry
+    commutative e₁ e₂ con := by {
+      funext s
+      apply Std.ExtHashMap.ext_getElem?
+      intro k
+      simp [Std.ExtHashMap.getElem?_alter]
+      unfold Pkg.map
+      by_cases h₁ : e₁.v.fst = k <;> by_cases h₂ : e₂.v.fst = k
+      . rw [if_pos h₁, if_pos h₂]
+        subst h₂
+        repeat rw [if_pos h₁]
+        repeat rw [if_pos h₁.symm]
+        have x := c.commutative (map snd e₁) (map snd e₂) con
+        unfold Pkg.map at x
+        simp
+        have x' := congr_fun x
+        grind
+      . repeat rw [if_pos h₁]
+        repeat rw [if_neg h₂]
+        grind
+      . repeat rw [if_neg h₁]
+        repeat rw [if_pos h₂]
+        grind
+      . grind
+    }
   }
 
 def associate' (κ : Type*) [DecidableEq κ] [Hashable κ]
@@ -46,5 +69,27 @@ def associate' (κ : Type*) [DecidableEq κ] [Hashable κ]
       foldKeys op acmon init lift := init -- TODO
       foldValues op acmon init lift := init -- TODO
     }
-    commutative e₁ e₂ := by sorry
+    commutative e₁ e₂ := by {
+      funext s
+      apply Std.ExtHashMap.ext_getElem?
+      intro k
+      simp [Std.ExtHashMap.getElem?_alter]
+      by_cases h₁ : e₁.fst = k <;> by_cases h₂ : e₂.fst = k
+      . rw [if_pos h₁, if_pos h₂]
+        subst h₂
+        repeat rw [if_pos h₁]
+        repeat rw [if_pos h₁.symm]
+        have x := c.commutative e₁.snd e₂.snd
+        unfold Pkg.map at x
+        simp
+        have x' := congr_fun x
+        grind
+      . repeat rw [if_pos h₁]
+        repeat rw [if_neg h₂]
+        grind
+      . repeat rw [if_neg h₁]
+        repeat rw [if_pos h₂]
+        grind
+      . grind
+    }
   }
