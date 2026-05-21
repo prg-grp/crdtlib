@@ -41,18 +41,15 @@ def associate [PartialOrder τ] (κ : Type*) [DecidableEq κ] [Hashable κ]
         subst h₂
         repeat rw [if_pos h₁]
         repeat rw [if_pos h₁.symm]
-        have x := c.commutative (map snd e₁) (map snd e₂) con
-        unfold Pkg.map at x
-        simp
-        have x' := congr_fun x
-        grind
-      . repeat rw [if_pos h₁]
+        simp only [Option.getD_some, Option.some.injEq]
+        rw [h₁]
+        exact congr_fun (c.commutative (map snd e₁) (map snd e₂) con) _
+      . subst h₁
         repeat rw [if_neg h₂]
-        grind
+      . subst h₂
+        repeat rw [if_neg h₁]
       . repeat rw [if_neg h₁]
-        repeat rw [if_pos h₂]
-        grind
-      . grind
+        repeat rw [if_neg h₂]
     }
   }
 
@@ -79,17 +76,14 @@ def associate' (κ : Type*) [DecidableEq κ] [Hashable κ]
         subst h₂
         repeat rw [if_pos h₁]
         repeat rw [if_pos h₁.symm]
-        have x := c.commutative e₁.snd e₂.snd
-        unfold Pkg.map at x
-        simp
-        have x' := congr_fun x
-        grind
-      . repeat rw [if_pos h₁]
+        simp only [Option.getD_some, Option.some.injEq]
+        rw [h₁]
+        exact congr_fun (c.commutative e₁.snd e₂.snd) _
+      . subst h₁
         repeat rw [if_neg h₂]
-        grind
+      . subst h₂
+        repeat rw [if_neg h₁]
       . repeat rw [if_neg h₁]
-        repeat rw [if_pos h₂]
-        grind
-      . grind
+        repeat rw [if_neg h₂]
     }
   }
