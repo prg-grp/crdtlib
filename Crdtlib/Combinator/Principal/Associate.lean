@@ -28,7 +28,7 @@ def associate [PartialOrder τ] (κ : Type*) [DecidableEq κ] [Hashable κ]
       )
     interpret s := {
       map k := c.interpret (s.getD k 0)
-      toList := sorry -- TODO
+      toList := [] -- TODO (only for interpretation, not used in benchmarks)
     }
     commutative e₁ e₂ con := by {
       funext s
@@ -63,7 +63,7 @@ def associate' (κ : Type*) [DecidableEq κ] [Hashable κ]
       )
     interpret s := {
       map k := c.interpret (s.getD k 0)
-      toList := sorry -- TODO
+      toList := [] -- TODO (only for interpretation, not used in benchmarks)
     }
     commutative e₁ e₂ := by {
       funext s

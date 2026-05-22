@@ -20,7 +20,7 @@ private def po_traversal {σ : Type*}
     [DecidableEq σ] [LinearOrder σ] [Bot σ] [Hashable σ]
     (s : SetInterpretation σ × AssociateInterpretation σ (SetInterpretation σ))
     : List σ :=
-  sorry
+      [] -- TODO (only for interpretation, not used in benchmarks)
 
 inductive ListOp (σ : Type*) where
   | insert (prev : σ) (elem : σ) (next : σ)

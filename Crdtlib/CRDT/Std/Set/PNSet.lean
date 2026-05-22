@@ -8,7 +8,7 @@ def pnset' (σ : Type*) [DecidableEq σ] [Hashable σ] : CRDT' (SetOp σ) (Assoc
   map_interpretation'
     (λ elems ↦ {
       mem k := elems.map k > (0 : Int)
-      toList := sorry -- TODO
+      toList := [] -- TODO (only for interpretation, not used in benchmarks)
     })
   $ map_op'
     (λ op ↦ match op with
