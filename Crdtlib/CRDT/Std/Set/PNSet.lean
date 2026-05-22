@@ -4,11 +4,11 @@ import Crdtlib.Combinator.Principal.Associate
 import Crdtlib.Combinator.Principal.MapInterpretation
 import Crdtlib.Combinator.Derived.MapOp
 
-def pnset' (σ : Type*) [DecidableEq σ] [Hashable σ] : CRDT' (SetOp σ) (AssociateState σ ℤ) (SetInterpretation σ) :=
+def pnset' (σ : Type*) [DecidableEq σ] [Hashable σ] : CRDT' (SetOp σ) (AssociateState σ Int) (SetInterpretation σ) :=
   map_interpretation'
     (λ elems ↦ {
-      mem k := elems.map k > (0 : ℤ)
-      fold op acmon init lift := sorry -- (elems.filter (λ a ↦ 0 < f a))
+      mem k := elems.map k > (0 : Int)
+      toList := sorry -- TODO
     })
   $ map_op'
     (λ op ↦ match op with

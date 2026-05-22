@@ -16,46 +16,11 @@ open Batteries
 instance : Zero (Finset α) where
   zero := ∅
 
-private partial def dfs [DecidableEq σ] [LinearOrder σ] [Hashable σ]
-    (verts   : Std.ExtHashMap σ ℕ)
-    (outEdges : Std.ExtHashMap σ $ Std.ExtHashMap σ ℕ)
-    (active  : σ → ℕ)
-    (v       : σ)
-    (visited : Finset σ)
-    (acc     : List σ)
-    : Finset σ × List σ :=
-  if v ∈ visited then (visited, acc)
-  else
-    let visited' := insert v visited
-    -- let candidates := (outEdges v).filter (λ _ ↦ verts · > 0) |>.keysArray  .sort (· ≤ ·)
-    -- let candidates :=
-    --   Std.DHashMap.fold
-    --     (fun acc k _ => if verts k > 0 then acc.push k else acc)
-    --     #[]
-    --     (outEdges v)
-    --   |>.toList
-    --   |>.mergeSort (· ≤ ·)
-    let candidates : List σ := sorry
-      -- ((outEdges v).inner.filterMap (fun k _ => if verts k > 0 then some k else none))
-      -- |>.toList
-      -- |>.mergeSort (· ≤ ·)
-
-
-
-    let (visited'', acc') := candidates.foldl
-      (λ st x => dfs verts outEdges active x st.1 st.2)
-      (visited', acc)
-    (visited'', if active v > 0 then v :: acc' else acc')
-
-private def po_traversal {σ : Type*} [DecidableEq σ] [LinearOrder σ] [Bot σ] [Hashable σ]
-    (s : (SetInterpretation σ) × (AssociateInterpretation σ (SetInterpretation σ))) : List σ :=
-  -- let verts   := s.1.1
-  -- let outEdges := s.1.2
-  -- let deleted := s.2
-  -- let active  := verts \ deleted
-  -- let active : σ → ℕ := (λ k ↦ if deleted.getD k 0 > 0 then 0 else verts.getD k 0)
-  -- (dfs verts outEdges active ⊥ ∅ []).2
-  []
+private def po_traversal {σ : Type*}
+    [DecidableEq σ] [LinearOrder σ] [Bot σ] [Hashable σ]
+    (s : SetInterpretation σ × AssociateInterpretation σ (SetInterpretation σ))
+    : List σ :=
+  sorry
 
 inductive ListOp (σ : Type*) where
   | insert (prev : σ) (elem : σ) (next : σ)

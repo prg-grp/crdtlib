@@ -1,6 +1,7 @@
 import Crdtlib.CRDT.Basic
 import Std.Data.ExtHashMap
 import Mathlib.Algebra.Group.Defs
+import Mathlib.Order.Defs.LinearOrder
 
 section Associate
 
@@ -14,8 +15,8 @@ abbrev AssociateState (κ σ : Type*) [DecidableEq κ] [Hashable κ] [LawfulBEq 
 
 structure AssociateInterpretation (κ γ : Type*) where
   map : κ → γ
-  foldKeys {α : Type} (op : α → α → α) [AddCommMonoid α] (a : α) (lift : κ → α) : α
-  foldValues {α : Type} (op : α → α → α) [AddCommMonoid α] (a : α) (lift : γ → α) : α
+  /-- Enumerate elements in the canonical order induced by `LinearOrder σ`. -/
+  toList [LinearOrder κ] : List (κ × γ)
 
 def associate [PartialOrder τ] (κ : Type*) [DecidableEq κ] [Hashable κ]
     [LawfulBEq κ] [LawfulHashable κ] [Zero σ]
@@ -27,8 +28,7 @@ def associate [PartialOrder τ] (κ : Type*) [DecidableEq κ] [Hashable κ]
       )
     interpret s := {
       map k := c.interpret (s.getD k 0)
-      foldKeys op acmon init lift := init -- TODO
-      foldValues op acmon init lift := init -- TODO
+      toList := sorry -- TODO
     }
     commutative e₁ e₂ con := by {
       funext s
@@ -63,8 +63,7 @@ def associate' (κ : Type*) [DecidableEq κ] [Hashable κ]
       )
     interpret s := {
       map k := c.interpret (s.getD k 0)
-      foldKeys op acmon init lift := init -- TODO
-      foldValues op acmon init lift := init -- TODO
+      toList := sorry -- TODO
     }
     commutative e₁ e₂ := by {
       funext s
