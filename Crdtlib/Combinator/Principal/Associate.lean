@@ -19,12 +19,12 @@ structure AssociateInterpretation (κ γ : Type*) where
   toList [LinearOrder κ] : List (κ × γ)
 
 def associate [PartialOrder τ] (κ : Type*) [DecidableEq κ] [Hashable κ]
-    [LawfulBEq κ] [LawfulHashable κ] [Zero σ]
+    [LawfulBEq κ] [LawfulHashable κ] [BEq σ] [LawfulBEq σ] [Zero σ]
     (c : CRDT τ ω σ γ)
   : CRDT τ (κ × ω) (AssociateState κ σ) (AssociateInterpretation κ γ) := {
     effect e s :=
       s.alter e.v.fst (λ x ↦
-        some $ c.effect (map snd e) (x.getD 0)
+        .guard (· != 0) (c.effect (map snd e) (x.getD 0))
       )
     interpret s := {
       map k := c.interpret (s.getD k 0)
@@ -35,15 +35,23 @@ def associate [PartialOrder τ] (κ : Type*) [DecidableEq κ] [Hashable κ]
       apply Std.ExtHashMap.ext_getElem?
       intro k
       simp [Std.ExtHashMap.getElem?_alter]
-      unfold Pkg.map
+      unfold Pkg.map Option.guard
       by_cases h₁ : e₁.v.fst = k <;> by_cases h₂ : e₂.v.fst = k
       . rw [if_pos h₁, if_pos h₂]
         subst h₂
-        repeat rw [if_pos h₁]
-        repeat rw [if_pos h₁.symm]
-        simp only [Option.getD_some, Option.some.injEq]
-        rw [h₁]
-        exact congr_fun (c.commutative (map snd e₁) (map snd e₂) con) _
+        iterate 2 rw [if_pos h₁]
+        iterate 2 repeat rw [if_pos h₁.symm]
+        have helper : ∀ x : σ, (if (x != 0) = true then some x else none).getD 0 = x := by {
+          intro x
+          by_cases h : x = 0
+          . subst h; simp
+          . rw [if_pos (bne_iff_ne.mpr h)]; rfl
+        }
+        simp only [helper]
+        rw [← h₁]
+        have key := congr_fun (c.commutative (map snd e₁) (map snd e₂) con) (s[e₁.v.fst]?.getD 0)
+        simp only [Function.comp_apply] at key
+        rw [key]
       . subst h₁
         repeat rw [if_neg h₂]
       . subst h₂
@@ -54,12 +62,12 @@ def associate [PartialOrder τ] (κ : Type*) [DecidableEq κ] [Hashable κ]
   }
 
 def associate' (κ : Type*) [DecidableEq κ] [Hashable κ]
-    [LawfulBEq κ] [LawfulHashable κ] [Zero σ]
+    [LawfulBEq κ] [LawfulHashable κ] [BEq σ] [LawfulBEq σ] [Zero σ]
     (c : CRDT' ω σ γ)
   : CRDT' (κ × ω) (AssociateState κ σ) (AssociateInterpretation κ γ) := {
     effect e s :=
       s.alter e.fst (λ x ↦
-        some $ c.effect e.2 (x.getD 0)
+        .guard (· != 0) (c.effect e.snd (x.getD 0))
       )
     interpret s := {
       map k := c.interpret (s.getD k 0)
@@ -70,14 +78,23 @@ def associate' (κ : Type*) [DecidableEq κ] [Hashable κ]
       apply Std.ExtHashMap.ext_getElem?
       intro k
       simp [Std.ExtHashMap.getElem?_alter]
+      unfold Option.guard
       by_cases h₁ : e₁.fst = k <;> by_cases h₂ : e₂.fst = k
       . rw [if_pos h₁, if_pos h₂]
         subst h₂
-        repeat rw [if_pos h₁]
-        repeat rw [if_pos h₁.symm]
-        simp only [Option.getD_some, Option.some.injEq]
-        rw [h₁]
-        exact congr_fun (c.commutative e₁.snd e₂.snd) _
+        iterate 2 rw [if_pos h₁]
+        iterate 2 repeat rw [if_pos h₁.symm]
+        have helper : ∀ x : σ, (if (x != 0) = true then some x else none).getD 0 = x := by {
+          intro x
+          by_cases h : x = 0
+          . subst h; simp
+          . rw [if_pos (bne_iff_ne.mpr h)]; rfl
+        }
+        simp only [helper]
+        rw [← h₁]
+        have key := congr_fun (c.commutative e₁.snd e₂.snd) (s[e₁.fst]?.getD 0)
+        simp only [Function.comp_apply] at key
+        rw [key]
       . subst h₁
         repeat rw [if_neg h₂]
       . subst h₂
