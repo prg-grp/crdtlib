@@ -3,8 +3,8 @@ import Mathlib.Data.Set.Finite.Basic
 
 section MVReg
 
-def mv_reg (σ : Type) [PartialOrder τ] [DecidableLT τ] [DecidableEq τ] [LinearOrder σ]
-  : CRDT τ σ (Finset $ Pkg τ σ) (Finset $ Pkg τ σ)
+def mv_regₜ (σ : Type) [PartialOrder τ] [DecidableLT τ] [DecidableEq τ] [LinearOrder σ]
+  : CRDTₜ τ σ (Finset (Event τ σ)) (Finset (Event τ σ))
   := {
     effect e s :=
       -- unfortunately this does not improve the complexity because the filter must go through all elements in the worst case

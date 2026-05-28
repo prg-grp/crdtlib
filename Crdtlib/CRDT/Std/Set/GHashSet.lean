@@ -9,19 +9,17 @@ section GHashSet
 
 variable (σ : Type*) [Hashable σ] [DecidableEq σ]
 
-def GHashSetState := AssociateState σ ℕ
+abbrev GHashSetState := AssociateState σ ℕ
 
 instance : Zero $ GHashSetState σ where
   zero := Std.ExtHashMap.emptyWithCapacity 8
 
-def ghashset'
-  : CRDT' σ (GHashSetState σ) (SetInterpretation σ)
-  := map_op' (λ x ↦ ⟨x, 1⟩)
-    $ map_interpretation' (λ g ↦ ⟨(· > 0) ∘ g.map, g.toList.filterMap λ ⟨k, v⟩ ↦ if v > 0 then .some k else .none⟩)
-    (associate' σ gcounter')
+def ghashset
+  : CRDT σ (GHashSetState σ) (SetInterpretation σ)
+  := map_op (λ x ↦ ⟨x, 1⟩)
+    $ map_interpretation (λ g ↦ ⟨(· > 0) ∘ g.map, g.toList.filterMap λ ⟨k, v⟩ ↦ if v > 0 then .some k else .none⟩)
+    (associate σ gcounter)
 
-def ghashset [PartialOrder τ]
-  := (ghashset' σ).toCRDT τ
 section GHashSetFFI
 
 variable {σ : Type*} [Hashable σ] [DecidableEq σ]
@@ -33,10 +31,10 @@ def ghashset_empty_u64 : GHashSetState UInt64 :=
 @[export ghashset_effect_u64]
 def ghashset_effect_u64 (event : UInt64) (state : GHashSetState UInt64)
     : GHashSetState UInt64 :=
-  (ghashset' UInt64).effect event state
+  (ghashset UInt64).effect event state
 
 @[export ghashset_interpret_mem_u64]
 def ghashset_interpret_mem_u64 (key : UInt64) (state : GHashSetState UInt64) : Bool :=
-  (ghashset' UInt64).interpret state |>.mem key
+  (ghashset UInt64).interpret state |>.mem key
 
 end GHashSetFFI

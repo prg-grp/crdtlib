@@ -16,13 +16,13 @@ variable (σ : Type*) [Hashable σ] [DecidableEq σ]
 
 def TPGraphState := (TPSetState σ) × (TPSetState (σ × σ))
 
-def tpgraph' [Zero σ] : CRDT' (GraphOp σ) (TPGraphState σ) (GraphInterpretation σ)
+def tpgraph [Zero σ] : CRDT (GraphOp σ) (TPGraphState σ) (GraphInterpretation σ)
   := id
-    $ map_op' (λ o : GraphOp σ ↦ match o with
+    $ map_op (λ o : GraphOp σ ↦ match o with
         | .addVertex vertex => .inl $ .add vertex
         | .removeVertex vertex => .inl $ .remove vertex
         | .addEdge edge => .inr $ .add edge
         | .removeEdge edge => .inr $ .remove edge
       )
-    $ map_interpretation' (λ ⟨vertices, edges⟩ ↦ ⟨vertices.mem, λ e@⟨e₁, e₂⟩ ↦ vertices.mem e₁ ∧ vertices.mem e₂ ∧ edges.mem e⟩)
-    $ disjoint_product' (tpset' σ) (tpset' (σ × σ))
+    $ map_interpretation (λ ⟨vertices, edges⟩ ↦ ⟨vertices.mem, λ e@⟨e₁, e₂⟩ ↦ vertices.mem e₁ ∧ vertices.mem e₂ ∧ edges.mem e⟩)
+    $ disjoint_product (tpset σ) (tpset (σ × σ))

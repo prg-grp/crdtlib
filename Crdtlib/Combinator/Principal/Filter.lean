@@ -4,8 +4,8 @@ section Filter
 
 open Pkg Prod
 
-def filter [PartialOrder τ] (p : ω → Bool) (c : CRDT τ { o : ω // p o } σ γ)
-  : CRDT τ ω σ γ
+def filterₜ [PartialOrder τ] (p : ω → Bool) (c : CRDTₜ τ { o : ω // p o } σ γ)
+  : CRDTₜ τ ω σ γ
   := {
     effect e s := if h : p e.v
       then c.effect { t := e.t, v := ⟨e.v, h⟩ } s
@@ -22,8 +22,8 @@ private def filtered (f : ω → Bool) (es : List ω) : List (Σ' e : ω, f e) :
   es.filterMap (fun o =>
     if h : f o then some ⟨o, h⟩ else none)
 
-def filter' (p : ω → Bool) (c : CRDT' { o : ω // p o } σ γ)
-  : CRDT' ω σ γ
+def filter (p : ω → Bool) (c : CRDT { o : ω // p o } σ γ)
+  : CRDT ω σ γ
   := {
     effect e s := if h : p e
       then c.effect ⟨e, h⟩ s

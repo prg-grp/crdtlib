@@ -5,8 +5,8 @@ section MapInterpretation
 
 open Pkg
 
-def map_interpretation [PartialOrder τ] (f : γ₁ → γ₂) (c : CRDT τ ω σ γ₁)
-  : CRDT τ ω σ γ₂
+def map_interpretationₜ [PartialOrder τ] (f : γ₁ → γ₂) (c : CRDTₜ τ ω σ γ₁)
+  : CRDTₜ τ ω σ γ₂
   := {
     effect := c.effect
     interpret := f ∘ c.interpret
@@ -17,8 +17,8 @@ def map_interpretation [PartialOrder τ] (f : γ₁ → γ₂) (c : CRDT τ ω �
     }
   }
 
-def map_interpretation' (f : γ₁ → γ₂) (c : CRDT' ω σ γ₁)
-  : CRDT' ω σ γ₂
+def map_interpretation (f : γ₁ → γ₂) (c : CRDT ω σ γ₁)
+  : CRDT ω σ γ₂
   := {
     effect := c.effect
     interpret := f ∘ c.interpret

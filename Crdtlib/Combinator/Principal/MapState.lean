@@ -5,8 +5,8 @@ section Iso
 
 open Pkg
 
-def map_state [PartialOrder τ] (f : σ₁ → σ₂) (f' : σ₂ → σ₁) (iso : f' ∘ f = id) (c : CRDT τ ω σ₁ γ)
-  : CRDT τ ω σ₂ γ
+def map_stateₜ [PartialOrder τ] (f : σ₁ → σ₂) (f' : σ₂ → σ₁) (iso : f' ∘ f = id) (c : CRDTₜ τ ω σ₁ γ)
+  : CRDTₜ τ ω σ₂ γ
   := {
     effect e := f ∘ (c.effect e) ∘ f'
     interpret := c.interpret ∘ f'
@@ -25,8 +25,8 @@ def map_state [PartialOrder τ] (f : σ₁ → σ₂) (f' : σ₂ → σ₁) (is
     }
   }
 
-def map_state' {σ₁ σ₂ ω γ} (f : σ₁ → σ₂) (f' : σ₂ → σ₁) (iso : f' ∘ f = id) (c : CRDT' ω σ₁ γ)
-  : CRDT' ω σ₂ γ
+def map_state {σ₁ σ₂ ω γ} (f : σ₁ → σ₂) (f' : σ₂ → σ₁) (iso : f' ∘ f = id) (c : CRDT ω σ₁ γ)
+  : CRDT ω σ₂ γ
   := {
     effect e := f ∘ (c.effect e) ∘ f'
     interpret := c.interpret ∘ f'

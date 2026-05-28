@@ -29,20 +29,20 @@ instance choiceLinearOrder : LinearOrder Choice where
 instance tagged_union_zero_choice : Zero Choice where
   zero := Choice.left
 
-def tagged_union [PartialOrder τ] [DecidableLT τ] [DecidableEq τ]
-  (c₁ : CRDT τ ω₁ σ₁ γ₁) (c₂ : CRDT τ ω₂ σ₂ γ₂)
-  : CRDT τ ((ω₁ ⊕ ω₂) ⊕ Choice) ((σ₁ × σ₂) × (Finset $ Pkg τ Choice)) (γ₁ ⊕ γ₂)
-  := map_interpretation (λ ⟨⟨l, r⟩, choice⟩ ↦
+def tagged_unionₜ [PartialOrder τ] [DecidableLT τ] [DecidableEq τ]
+  (c₁ : CRDTₜ τ ω₁ σ₁ γ₁) (c₂ : CRDTₜ τ ω₂ σ₂ γ₂)
+  : CRDTₜ τ ((ω₁ ⊕ ω₂) ⊕ Choice) ((σ₁ × σ₂) × (Finset $ Pkg τ Choice)) (γ₁ ⊕ γ₂)
+  := map_interpretationₜ (λ ⟨⟨l, r⟩, choice⟩ ↦
         match choice with -- map to correct substate depending on the choice
           | .left => Sum.inl l
           | .right => Sum.inr r)
-      $ disjoint_product (disjoint_product c₁ c₂) (lww Choice)
+      $ disjoint_productₜ (disjoint_productₜ c₁ c₂) (lwwₜ Choice)
 
-def auto_tagged_union [PartialOrder τ] [DecidableLT τ] [DecidableEq τ]
-  (c₁ : CRDT τ ω₁ σ₁ γ₁) (c₂ : CRDT τ ω₂ σ₂ γ₂)
-  : CRDT τ (ω₁ ⊕ ω₂) ((σ₁ × σ₂) × (Finset $ Pkg τ Choice)) (γ₁ ⊕ γ₂)
-  := traverse (λ o ↦
+def auto_tagged_unionₜ [PartialOrder τ] [DecidableLT τ] [DecidableEq τ]
+  (c₁ : CRDTₜ τ ω₁ σ₁ γ₁) (c₂ : CRDTₜ τ ω₂ σ₂ γ₂)
+  : CRDTₜ τ (ω₁ ⊕ ω₂) ((σ₁ × σ₂) × (Finset $ Pkg τ Choice)) (γ₁ ⊕ γ₂)
+  := traverseₜ (λ o ↦
       match o with
         | l@(.inl _) => [Sum.inl l, Sum.inr Choice.left]
         | r@(.inr _) => [Sum.inl r, Sum.inr Choice.right]
-    ) (tagged_union c₁ c₂)
+    ) (tagged_unionₜ c₁ c₂)

@@ -4,23 +4,23 @@ import Batteries.Logic
 
 section Traverse
 
-private def recurse'_k {F : Type u} [SizeOf F]
+private def recurse_k {F : Type u} [SizeOf F]
     (f : (o : F) → Option (ωₛ × ((o' : F) ×' sizeOf o' < sizeOf o)))
     (effect : ωₛ → σ → σ) (o : F) : σ → σ :=
   match f o with
   | .none => id
-  | .some ⟨oₛ, oₜ⟩ => (recurse'_k f effect oₜ.1) ∘ effect oₛ
+  | .some ⟨oₛ, oₜ⟩ => (recurse_k f effect oₜ.1) ∘ effect oₛ
 termination_by sizeOf o
 decreasing_by exact oₜ.2
 
-private lemma recurse'_k_comm_single {F : Type u} [SizeOf F]
+private lemma recurse_k_comm_single {F : Type u} [SizeOf F]
     (f : (o : F) → Option (ωₛ × ((o' : F) ×' sizeOf o' < sizeOf o)))
     (effect : ωₛ → σ → σ)
     (comm : ∀ e₁ e₂, (effect e₂) ∘ (effect e₁) = (effect e₁) ∘ (effect e₂))
     (o : F) (y : ωₛ) (t : σ) :
-    recurse'_k f effect o (effect y t) = effect y (recurse'_k f effect o t) := by {
-      conv_lhs => rw [recurse'_k]
-      conv_rhs => rw [recurse'_k]
+    recurse_k f effect o (effect y t) = effect y (recurse_k f effect o t) := by {
+      conv_lhs => rw [recurse_k]
+      conv_rhs => rw [recurse_k]
       match h : f o with
         | .none => simp
         | .some ⟨oₛ, oₜ⟩ =>
@@ -30,57 +30,57 @@ private lemma recurse'_k_comm_single {F : Type u} [SizeOf F]
             simp only [Function.comp] at this
             exact this.symm
           }
-          rw [hxy, recurse'_k_comm_single f effect comm oₜ.1 y (effect oₛ t)]
+          rw [hxy, recurse_k_comm_single f effect comm oₜ.1 y (effect oₛ t)]
     }
 termination_by sizeOf o
 decreasing_by exact oₜ.2
 
-private lemma recurse'_k_comm {F : Type u} [SizeOf F]
+private lemma recurse_k_comm {F : Type u} [SizeOf F]
     (f : (o : F) → Option (ωₛ × ((o' : F) ×' sizeOf o' < sizeOf o)))
     (effect : ωₛ → σ → σ)
     (comm : ∀ e₁ e₂, (effect e₂) ∘ (effect e₁) = (effect e₁) ∘ (effect e₂))
     (o₁ o₂ : F) (t : σ) :
-    recurse'_k f effect o₁ (recurse'_k f effect o₂ t) =
-    recurse'_k f effect o₂ (recurse'_k f effect o₁ t) := by {
-      conv_lhs => rw [recurse'_k]
+    recurse_k f effect o₁ (recurse_k f effect o₂ t) =
+    recurse_k f effect o₂ (recurse_k f effect o₁ t) := by {
+      conv_lhs => rw [recurse_k]
       match h : f o₁ with
         | .none =>
-          have hrhs : recurse'_k f effect o₁ t = t := by rw [recurse'_k, h]; simp
+          have hrhs : recurse_k f effect o₁ t = t := by rw [recurse_k, h]; simp
           rw [hrhs]
           rfl
         | .some ⟨oₛ, oₜ⟩ =>
           simp only [Function.comp]
-          rw [recurse'_k_comm_single f effect comm o₂ oₛ t |>.symm]
-          rw [recurse'_k_comm f effect comm oₜ.1 o₂ (effect oₛ t)]
-          have hfold : recurse'_k f effect o₁ t = recurse'_k f effect oₜ.1 (effect oₛ t) := by
-            rw [recurse'_k, h]; simp only [Function.comp]
+          rw [recurse_k_comm_single f effect comm o₂ oₛ t |>.symm]
+          rw [recurse_k_comm f effect comm oₜ.1 o₂ (effect oₛ t)]
+          have hfold : recurse_k f effect o₁ t = recurse_k f effect oₜ.1 (effect oₛ t) := by
+            rw [recurse_k, h]; simp only [Function.comp]
           rw [← hfold]
     }
 termination_by sizeOf o₁
 decreasing_by exact oₜ.2
 
-def traverse_rec' {F : Type u} [SizeOf F] (lift : ωₜ → F)
+def traverse_rec {F : Type u} [SizeOf F] (lift : ωₜ → F)
     (f : (o : F) → Option (ωₛ × ((o' : F) ×' sizeOf o' < sizeOf o)))
-    (c : CRDT' ωₛ σ γ) : CRDT' ωₜ σ γ := {
-  effect e := recurse'_k f c.effect (lift e)
+    (c : CRDT ωₛ σ γ) : CRDT ωₜ σ γ := {
+  effect e := recurse_k f c.effect (lift e)
   interpret := c.interpret
   commutative e₁ e₂ := by
     ext s
-    exact (recurse'_k_comm f c.effect c.commutative (lift e₁) (lift e₂) s).symm
+    exact (recurse_k_comm f c.effect c.commutative (lift e₁) (lift e₂) s).symm
 }
 
 private def listStep : (o : List ωₛ) → Option (ωₛ × ((o' : List ωₛ) ×' sizeOf o' < sizeOf o))
   | .nil => .none
   | .cons x xs => .some ⟨x, xs, by simp⟩
 
-def traverse_list' (f : ωₜ → List ωₛ) (c : CRDT' ωₛ σ γ) : CRDT' ωₜ σ γ :=
-  traverse_rec' f listStep c
+def traverse_list (f : ωₜ → List ωₛ) (c : CRDT ωₛ σ γ) : CRDT ωₜ σ γ :=
+  traverse_rec f listStep c
 
-def traverse_mapop' (f : ωₜ → ωₛ) (c : CRDT' ωₛ σ γ)
-  : CRDT' ωₜ σ γ
-  := traverse_list' (λ x ↦ [f x]) c
+def traverse_mapop (f : ωₜ → ωₛ) (c : CRDT ωₛ σ γ)
+  : CRDT ωₜ σ γ
+  := traverse_list (λ x ↦ [f x]) c
 
-private lemma foldr_comm_single' (φ : ω₁ → σ → σ) (comm : ∀ e₁ e₂ : ω₁, (φ e₂) ∘ (φ e₁) = (φ e₁) ∘ (φ e₂)) (xs : List ω₁) (y : ω₁) (t : σ) :
+private lemma foldr_comm_single (φ : ω₁ → σ → σ) (comm : ∀ e₁ e₂ : ω₁, (φ e₂) ∘ (φ e₁) = (φ e₁) ∘ (φ e₂)) (xs : List ω₁) (y : ω₁) (t : σ) :
     xs.foldr φ (φ y t) = φ y (xs.foldr φ t) := by
   induction xs generalizing t with
   | nil => rfl
@@ -89,28 +89,28 @@ private lemma foldr_comm_single' (φ : ω₁ → σ → σ) (comm : ∀ e₁ e�
     rw [ih]
     exact (congr_fun (comm x y) _).symm
 
-private lemma foldr_comm' (φ : ω₁ → σ → σ) (comm : ∀ e₁ e₂ : ω₁, (φ e₂) ∘ (φ e₁) = (φ e₁) ∘ (φ e₂)) (xs ys : List ω₁) (t : σ) :
+private lemma foldr_comm (φ : ω₁ → σ → σ) (comm : ∀ e₁ e₂ : ω₁, (φ e₂) ∘ (φ e₁) = (φ e₁) ∘ (φ e₂)) (xs ys : List ω₁) (t : σ) :
     xs.foldr φ (ys.foldr φ t) = ys.foldr φ (xs.foldr φ t) := by
   induction xs generalizing t with
   | nil => simp
   | cons x xs ih =>
     simp only [List.foldr_cons]
-    rw [ih, ← foldr_comm_single' φ comm]
+    rw [ih, ← foldr_comm_single φ comm]
 
--- same as traverse_list'
-def traverse' (f : ω₂ → List ω₁) (c : CRDT' ω₁ σ γ) : CRDT' ω₂ σ γ
+-- same as traverse_list
+def traverse (f : ω₂ → List ω₁) (c : CRDT ω₁ σ γ) : CRDT ω₂ σ γ
   := {
     effect e := (f e).foldr c.effect
     interpret := c.interpret
     commutative e₁ e₂ := by {
       ext _
-      exact foldr_comm' c.effect c.commutative _ _ _
+      exact foldr_comm c.effect c.commutative _ _ _
     }
   }
 
 private lemma foldr_comm_single_timed
     [PartialOrder τ]
-    (c : CRDT τ ω₁ σ γ)
+    (c : CRDTₜ τ ω₁ σ γ)
     (t₁ t₂ : τ) (con : Concurrent t₁ t₂)
     (xs : List ω₁) (y : ω₁) (s : σ) :
     xs.foldr (λ o ↦ c.effect ⟨t₁, o⟩)
@@ -126,7 +126,7 @@ private lemma foldr_comm_single_timed
 
 private lemma foldr_comm_timed
     [PartialOrder τ]
-    (c : CRDT τ ω₁ σ γ)
+    (c : CRDTₜ τ ω₁ σ γ)
     (t₁ t₂ : τ) (con : Concurrent t₁ t₂)
     (xs ys : List ω₁) (s : σ) :
     xs.foldr (λ o ↦ c.effect ⟨t₁, o⟩)
@@ -141,8 +141,8 @@ private lemma foldr_comm_timed
     exact (foldr_comm_single_timed c t₂ t₁ con.symm ys x
           (xs.foldr (λ o ↦ c.effect ⟨t₁, o⟩) s)).symm
 
-def traverse [PartialOrder τ] (f : ω₂ → List ω₁) (c : CRDT τ ω₁ σ γ)
-  : CRDT τ ω₂ σ γ
+def traverseₜ [PartialOrder τ] (f : ω₂ → List ω₁) (c : CRDTₜ τ ω₁ σ γ)
+  : CRDTₜ τ ω₂ σ γ
   := {
     effect := λ e ↦ (f e.v).foldr (λ o ↦ c.effect ⟨e.t, o⟩)
     interpret := c.interpret

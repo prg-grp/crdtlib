@@ -7,6 +7,7 @@ import Crdtlib.Combinator.Derived.JointProduct
 import Crdtlib.Combinator.Principal.MapInterpretation
 import Crdtlib.Combinator.Principal.Traverse
 import Crdtlib.Combinator.Derived.DisjointProduct
+import Crdtlib.Combinator.Principal.MapState
 import Batteries
 
 section POList
@@ -28,31 +29,36 @@ inductive ListOp (σ : Type*) where
 
 variable (σ : Type*) [Hashable σ] [DecidableEq σ] [Zero σ]
 
-def edges [Hashable σ]
-  : CRDT' (σ × σ × σ) (AssociateState σ (GHashSetState σ)) (AssociateInterpretation σ (SetInterpretation σ))
-  := traverse'
+def edges
+  : CRDT (σ × σ × σ) (AssociateState σ (GHashSetState σ)) (AssociateInterpretation σ (SetInterpretation σ))
+  := traverse
     (λ ⟨prev, elem, next⟩ ↦ [⟨prev, elem⟩, ⟨elem, next⟩])
-    (associate' σ (ghashset' σ))
+    (associate σ (ghashset σ))
+
+-- def edges'
+--   : CRDT (σ × σ × σ) (Std.ExtHashMap σ (Std.ExtHashMap σ Bool)) (σ → (Std.ExtHashMap σ Bool))
+--   := edges σ
+
 
 abbrev POListState [DecidableEq σ] [Hashable σ]
   := (AssociateState σ ℤ) × (AssociateState σ (GHashSetState σ))
 
-def po_list' [LinearOrder σ] [Bot σ] [Zero σ] [Hashable σ]
-  : CRDT' (ListOp σ) (POListState σ) (List σ)
-  := map_interpretation' po_traversal
-    $ traverse'
+def po_list [LinearOrder σ] [Bot σ] [Zero σ] [Hashable σ]
+  : CRDT (ListOp σ) (POListState σ) (List σ)
+  := map_interpretation po_traversal
+    $ traverse
       (λ op ↦ match op with
         | .insert prev elem next => [.inl $ .add elem, .inr ⟨prev, elem, next⟩]
         | .remove elem => [.inl $ .remove elem]
       )
-    $ (disjoint_product'
+    $ (disjoint_product
         -- add-nodes, edges
-        (pnset' σ)
+        (pnset σ)
         (edges σ))
 
-def po_list {τ : Type} [PartialOrder τ] [LinearOrder σ] [Bot σ] [Zero σ] [Hashable σ]
-  : CRDT τ (ListOp σ) (POListState σ) (List σ)
-  := (po_list' σ).toCRDT τ
+def po_listₜ {τ : Type} [PartialOrder τ] [LinearOrder σ] [Bot σ] [Zero σ] [Hashable σ]
+  : CRDTₜ τ (ListOp σ) (POListState σ) (List σ)
+  := (po_list σ).toCRDTₜ τ
 
 end POList
 
@@ -67,9 +73,9 @@ inductive ValueListOp (χ ω : Type*) where
 
 variable (χ : Type u) [DecidableEq χ]
 
-def po_list_with_values {τ : Type} [PartialOrder τ] [LinearOrder χ] [Bot χ] [Zero χ] [Hashable χ] [Zero σ] [Zero γ]
-  (c : CRDT τ ω σ γ)
-  : CRDT τ (ValueListOp χ ω) (AssociateState χ σ × POListState χ) (List (χ × γ))
+def po_list_with_values  [LinearOrder χ] [Bot χ] [Zero χ] [Hashable χ] [Zero σ] [Zero γ] [BEq σ] [LawfulBEq σ]
+  (c : CRDT ω σ γ)
+  : CRDT (ValueListOp χ ω) (AssociateState χ σ × POListState χ) (List (χ × γ))
   := id
     $ map_interpretation (λ ⟨g, l⟩ ↦ l.map (λ x ↦ ⟨x, g.map x⟩))
     $ map_op (λ op ↦ match op with

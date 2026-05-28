@@ -2,6 +2,9 @@ structure Pkg (τ : Type) (υ : Type u) where
   t : τ
   v : υ
 
+@[simp, reducible]
+def Event := Pkg
+
 namespace Pkg
 
 instance [Hashable α] : Hashable $ Pkg τ α where

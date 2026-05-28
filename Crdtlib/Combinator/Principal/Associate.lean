@@ -7,10 +7,10 @@ section Associate
 
 open Prod Pkg
 
-instance [DecidableEq κ] [Hashable κ] [LawfulBEq κ] : Zero $ Std.ExtHashMap κ σ where
+instance [DecidableEq κ] [Hashable κ] : Zero $ Std.ExtHashMap κ σ where
   zero := Std.ExtHashMap.emptyWithCapacity 8
 
-abbrev AssociateState (κ σ : Type*) [DecidableEq κ] [Hashable κ] [LawfulBEq κ] [LawfulHashable κ] [Zero σ]
+abbrev AssociateState (κ σ : Type*) [DecidableEq κ] [Hashable κ]
   := Std.ExtHashMap κ σ
 
 structure AssociateInterpretation (κ γ : Type*) where
@@ -18,10 +18,10 @@ structure AssociateInterpretation (κ γ : Type*) where
   /-- Enumerate elements in the canonical order induced by `LinearOrder σ`. -/
   toList [LinearOrder κ] : List (κ × γ)
 
-def associate [PartialOrder τ] (κ : Type*) [DecidableEq κ] [Hashable κ]
+def associateₜ [PartialOrder τ] (κ : Type*) [DecidableEq κ] [Hashable κ]
     [LawfulBEq κ] [LawfulHashable κ] [BEq σ] [LawfulBEq σ] [Zero σ]
-    (c : CRDT τ ω σ γ)
-  : CRDT τ (κ × ω) (AssociateState κ σ) (AssociateInterpretation κ γ) := {
+    (c : CRDTₜ τ ω σ γ)
+  : CRDTₜ τ (κ × ω) (AssociateState κ σ) (AssociateInterpretation κ γ) := {
     effect e s :=
       s.alter e.v.fst (λ x ↦
         .guard (· != 0) (c.effect (map snd e) (x.getD 0))
@@ -61,10 +61,10 @@ def associate [PartialOrder τ] (κ : Type*) [DecidableEq κ] [Hashable κ]
     }
   }
 
-def associate' (κ : Type*) [DecidableEq κ] [Hashable κ]
+def associate (κ : Type*) [DecidableEq κ] [Hashable κ]
     [LawfulBEq κ] [LawfulHashable κ] [BEq σ] [LawfulBEq σ] [Zero σ]
-    (c : CRDT' ω σ γ)
-  : CRDT' (κ × ω) (AssociateState κ σ) (AssociateInterpretation κ γ) := {
+    (c : CRDT ω σ γ)
+  : CRDT (κ × ω) (AssociateState κ σ) (AssociateInterpretation κ γ) := {
     effect e s :=
       s.alter e.fst (λ x ↦
         .guard (· != 0) (c.effect e.snd (x.getD 0))
