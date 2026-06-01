@@ -40,8 +40,9 @@ def edges
 --   := edges σ
 
 
-abbrev POListState [DecidableEq σ] [Hashable σ]
-  := (AssociateState σ ℤ) × (AssociateState σ (GHashSetState σ))
+abbrev POListState := (AssociateState σ ℤ) × (AssociateState σ (GHashSetState σ))
+
+instance : DecidableEq (POListState σ) := inferInstance
 
 def po_list [LinearOrder σ] [Bot σ] [Zero σ] [Hashable σ]
   : CRDT (ListOp σ) (POListState σ) (List σ)
