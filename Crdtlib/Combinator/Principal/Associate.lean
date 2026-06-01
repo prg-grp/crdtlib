@@ -13,18 +13,18 @@ instance [DecidableEq κ] [Hashable κ] : Zero $ Std.ExtHashMap κ σ where
 abbrev AssociateState (κ σ : Type*) [DecidableEq κ] [Hashable κ]
   := Std.ExtHashMap κ σ
 
+instance [DecidableEq κ] [Hashable κ] [DecidableEq σ] : DecidableEq (AssociateState κ σ) := inferInstance
+
 structure AssociateInterpretation (κ γ : Type*) where
   map : κ → γ
   /-- Enumerate elements in the canonical order induced by `LinearOrder σ`. -/
   toList [LinearOrder κ] : List (κ × γ)
 
-def associateₜ [PartialOrder τ] (κ : Type*) [DecidableEq κ] [Hashable κ]
-    [LawfulBEq κ] [LawfulHashable κ] [BEq σ] [LawfulBEq σ] [Zero σ]
-    (c : CRDTₜ τ ω σ γ)
+def associateₜ [PartialOrder τ] (κ : Type*) [DecidableEq κ] [Hashable κ] [DecidableEq σ] [Zero σ] (c : CRDTₜ τ ω σ γ)
   : CRDTₜ τ (κ × ω) (AssociateState κ σ) (AssociateInterpretation κ γ) := {
     effect e s :=
       s.alter e.v.fst (λ x ↦
-        .guard (· != 0) (c.effect (map snd e) (x.getD 0))
+        .guard (· ≠ 0) (c.effect (map snd e) (x.getD 0))
       )
     interpret s := {
       map k := c.interpret (s.getD k 0)
@@ -41,11 +41,9 @@ def associateₜ [PartialOrder τ] (κ : Type*) [DecidableEq κ] [Hashable κ]
         subst h₂
         iterate 2 rw [if_pos h₁]
         iterate 2 repeat rw [if_pos h₁.symm]
-        have helper : ∀ x : σ, (if (x != 0) = true then some x else none).getD 0 = x := by {
+        have helper : ∀ x : σ, (if (!decide (x = 0)) = true then some x else none).getD 0 = x := by {
           intro x
-          by_cases h : x = 0
-          . subst h; simp
-          . rw [if_pos (bne_iff_ne.mpr h)]; rfl
+          by_cases h : x = 0 <;> simp [h]
         }
         simp only [helper]
         rw [← h₁]
@@ -61,13 +59,11 @@ def associateₜ [PartialOrder τ] (κ : Type*) [DecidableEq κ] [Hashable κ]
     }
   }
 
-def associate (κ : Type*) [DecidableEq κ] [Hashable κ]
-    [LawfulBEq κ] [LawfulHashable κ] [BEq σ] [LawfulBEq σ] [Zero σ]
-    (c : CRDT ω σ γ)
+def associate (κ : Type*) [DecidableEq κ] [Hashable κ] [DecidableEq σ] [Zero σ] (c : CRDT ω σ γ)
   : CRDT (κ × ω) (AssociateState κ σ) (AssociateInterpretation κ γ) := {
     effect e s :=
       s.alter e.fst (λ x ↦
-        .guard (· != 0) (c.effect e.snd (x.getD 0))
+        .guard (· ≠ 0) (c.effect e.snd (x.getD 0))
       )
     interpret s := {
       map k := c.interpret (s.getD k 0)
@@ -84,11 +80,9 @@ def associate (κ : Type*) [DecidableEq κ] [Hashable κ]
         subst h₂
         iterate 2 rw [if_pos h₁]
         iterate 2 repeat rw [if_pos h₁.symm]
-        have helper : ∀ x : σ, (if (x != 0) = true then some x else none).getD 0 = x := by {
+        have helper : ∀ x : σ, (if (!decide (x = 0)) = true then some x else none).getD 0 = x := by {
           intro x
-          by_cases h : x = 0
-          . subst h; simp
-          . rw [if_pos (bne_iff_ne.mpr h)]; rfl
+          by_cases h : x = 0 <;> simp [h]
         }
         simp only [helper]
         rw [← h₁]
