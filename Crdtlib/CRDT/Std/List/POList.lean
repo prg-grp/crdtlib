@@ -73,8 +73,7 @@ inductive ValueListOp (χ ω : Type*) where
 
 variable (χ : Type u) [DecidableEq χ]
 
-def po_list_with_values  [LinearOrder χ] [Bot χ] [Zero χ] [Hashable χ] [Zero σ] [Zero γ] [BEq σ] [LawfulBEq σ]
-  (c : CRDT ω σ γ)
+def po_list_with_values [LinearOrder χ] [Bot χ] [Zero χ] [Hashable χ] [Zero σ] [DecidableEq σ] (c : CRDT ω σ γ)
   : CRDT (ValueListOp χ ω) (AssociateState χ σ × POListState χ) (List (χ × γ))
   := id
     $ map_interpretation (λ ⟨g, l⟩ ↦ l.map (λ x ↦ ⟨x, g.map x⟩))
@@ -83,5 +82,15 @@ def po_list_with_values  [LinearOrder χ] [Bot χ] [Zero χ] [Hashable χ] [Zero
       | .insert prev pos next => .inr $ .insert prev pos next
       | .remove pos => .inr $ .remove pos)
     $ disjoint_product (associate χ c) (po_list χ)
+
+def po_list_with_valuesₜ [PartialOrder τ] [LinearOrder χ] [Bot χ] [Zero χ] [Hashable χ] [Zero σ] [DecidableEq σ] (c : CRDTₜ τ ω σ γ)
+  : CRDTₜ τ (ValueListOp χ ω) (AssociateState χ σ × POListState χ) (List (χ × γ))
+  := id
+    $ map_interpretationₜ (λ ⟨g, l⟩ ↦ l.map (λ x ↦ ⟨x, g.map x⟩))
+    $ map_opₜ (λ op ↦ match op with
+      | .mutate pos op => .inl ⟨pos, op⟩
+      | .insert prev pos next => .inr $ .insert prev pos next
+      | .remove pos => .inr $ .remove pos)
+    $ disjoint_productₜ (associateₜ χ c) (po_listₜ χ)
 
 end POListWithValues
