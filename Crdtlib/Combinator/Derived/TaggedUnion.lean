@@ -1,4 +1,4 @@
-import Crdtlib.CRDT.Std.LWW
+import Crdtlib.CRDT.Std.LWW.MVLWW
 import Crdtlib.Combinator.Principal.MapInterpretation
 import Crdtlib.Combinator.Principal.Traverse
 import Crdtlib.Combinator.Derived.DisjointProduct
@@ -31,16 +31,16 @@ instance tagged_union_zero_choice : Zero Choice where
 
 def tagged_unionₜ [PartialOrder τ] [DecidableLT τ] [DecidableEq τ]
   (c₁ : CRDTₜ τ ω₁ σ₁ γ₁) (c₂ : CRDTₜ τ ω₂ σ₂ γ₂)
-  : CRDTₜ τ ((ω₁ ⊕ ω₂) ⊕ Choice) ((σ₁ × σ₂) × (Finset $ Pkg τ Choice)) (γ₁ ⊕ γ₂)
+  : CRDTₜ τ ((ω₁ ⊕ ω₂) ⊕ Choice) ((σ₁ × σ₂) × (Finset (Event τ Choice))) (γ₁ ⊕ γ₂)
   := map_interpretationₜ (λ ⟨⟨l, r⟩, choice⟩ ↦
         match choice with -- map to correct substate depending on the choice
           | .left => Sum.inl l
           | .right => Sum.inr r)
-      $ disjoint_productₜ (disjoint_productₜ c₁ c₂) (lwwₜ Choice)
+      $ disjoint_productₜ (disjoint_productₜ c₁ c₂) (mv_lwwₜ Choice)
 
 def auto_tagged_unionₜ [PartialOrder τ] [DecidableLT τ] [DecidableEq τ]
   (c₁ : CRDTₜ τ ω₁ σ₁ γ₁) (c₂ : CRDTₜ τ ω₂ σ₂ γ₂)
-  : CRDTₜ τ (ω₁ ⊕ ω₂) ((σ₁ × σ₂) × (Finset $ Pkg τ Choice)) (γ₁ ⊕ γ₂)
+  : CRDTₜ τ (ω₁ ⊕ ω₂) ((σ₁ × σ₂) × (Finset (Event τ Choice))) (γ₁ ⊕ γ₂)
   := traverseₜ (λ o ↦
       match o with
         | l@(.inl _) => [Sum.inl l, Sum.inr Choice.left]
