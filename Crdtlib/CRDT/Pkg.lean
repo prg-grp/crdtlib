@@ -1,10 +1,12 @@
 structure Pkg (τ : Type) (υ : Type u) where
   t : τ
   v : υ
+deriving DecidableEq
 
 @[simp, reducible]
 def Event := Pkg
 
+instance [DecidableEq τ] [DecidableEq υ] : DecidableEq (Event τ υ) := inferInstance
 namespace Pkg
 
 instance [Hashable α] : Hashable $ Pkg τ α where
