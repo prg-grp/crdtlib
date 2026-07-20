@@ -21,7 +21,21 @@ private def po_traversal {σ : Type*}
     [DecidableEq σ] [LinearOrder σ] [Bot σ] [Hashable σ]
     (s : SetInterpretation σ × AssociateInterpretation σ (SetInterpretation σ))
     : List σ :=
-      [] -- TODO (only for interpretation, not used in benchmarks)
+  let ⟨live, adj⟩ := s
+  let succs : σ → List σ := λ v ↦ (adj.map v).toList.reverse
+  let bound : ℕ := 1 + adj.toList.foldl (λ n kv ↦ n + kv.snd.toList.length) 0
+  let rec go (fuel : ℕ) (visited out : List σ) (v : σ) : List σ × List σ :=
+    match fuel with
+    | 0 => (visited, out)
+    | fuel + 1 =>
+      let (visited', out') :=
+        (succs v).foldl
+          (λ acc w ↦
+            if acc.fst.contains w then acc
+            else go fuel (w :: acc.fst) acc.snd w)
+          (visited, out)
+      (visited', if live.mem v ∧ v ≠ ⊥ then v :: out' else out')
+  (go bound [⊥] [] ⊥).snd
 
 inductive ListOp (σ : Type*) where
   | insert (prev : σ) (elem : σ) (next : σ)

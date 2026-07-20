@@ -4,16 +4,15 @@ import Crdtlib.Combinator.Principal.Associate
 import Crdtlib.Combinator.Principal.MapInterpretation
 import Crdtlib.Combinator.Derived.MapOp
 
-def pnset (σ : Type*) [DecidableEq σ] [Hashable σ] : CRDT (SetOp σ) (AssociateState σ Int) (SetInterpretation σ) :=
-  map_interpretation
-    (λ elems ↦ {
-      mem k := elems.map k > (0 : Int)
-      toList := [] -- TODO (only for interpretation, not used in benchmarks)
-    })
-  $ map_op
-    (λ op ↦ match op with
-      | .add elem => ⟨elem, 1⟩
-      | .remove elem => ⟨elem, -1⟩)
-  $ associate σ counter
+def pnset (σ : Type*) [DecidableEq σ] [Hashable σ]
+  : CRDT (SetOp σ) (AssociateState σ Int) (SetInterpretation σ)
+  := map_op (λ op ↦ match op with
+        | .add elem => ⟨elem, 1⟩
+        | .remove elem => ⟨elem, -1⟩)
+    $ map_interpretation (λ s ↦ {
+        mem := (· > (0 : ℤ)) ∘ s.map
+        toList := s.toList.filterMap λ ⟨k, v⟩ ↦ if v > 0 then .some k else .none
+      })
+    $ associate σ counter
 
 def pnsetₜ [PartialOrder τ] (σ : Type*) [Hashable σ] [Zero σ] [DecidableEq σ] := (pnset σ).toCRDTₜ τ

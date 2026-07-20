@@ -17,8 +17,11 @@ instance : Zero $ GHashSetState σ where
 def ghashset
   : CRDT σ (GHashSetState σ) (SetInterpretation σ)
   := map_op (λ x ↦ ⟨x, 1⟩)
-    $ map_interpretation (λ g ↦ ⟨(· > 0) ∘ g.map, g.toList.filterMap λ ⟨k, v⟩ ↦ if v > 0 then .some k else .none⟩)
-    (associate σ gcounter)
+    $ map_interpretation (λ s ↦ {
+        mem := (· > 0) ∘ s.map
+        toList := s.toList.filterMap λ ⟨k, v⟩ ↦ if v > 0 then .some k else .none
+      })
+    $ associate σ gcounter
 
 section GHashSetFFI
 

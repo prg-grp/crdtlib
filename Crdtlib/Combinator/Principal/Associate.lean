@@ -13,6 +13,25 @@ instance [DecidableEq κ] [Hashable κ] : Zero $ Std.ExtHashMap κ σ where
 abbrev AssociateState (κ σ : Type*) [DecidableEq κ] [Hashable κ]
   := Std.ExtHashMap κ σ
 
+def Std.ExtHashMap.toListSorted
+    [BEq α] [Hashable α] [LE α] [DecidableLE α] [Std.IsLinearOrder α]
+    [EquivBEq α] [LawfulHashable α] (x : Std.ExtHashMap α β) : List (α × β) :=
+  x.inner.lift (λ x => (Std.DHashMap.Const.toList x).mergeSort λ a b => a.1 ≤ b.1) ?_
+where finally
+  intro a b h
+  open DHashMap.Const in
+  have perm : ((toList a).mergeSort (·.1 ≤ ·.1)).Perm ((toList b).mergeSort (·.1 ≤ ·.1)) :=
+    (List.mergeSort_perm ..).trans (h.constToList_perm.trans (List.mergeSort_perm ..).symm)
+  have pairwise (a : Std.DHashMap α λ _ => β) :
+      ((toList a).mergeSort (·.1 ≤ ·.1)).Pairwise (λ a b => decide (a.1 ≤ b.1) = true ∧ (a.1 == b.1) = false) :=
+    (List.pairwise_mergeSort (by grind) (by grind) _).and
+      (distinct_keys_toList.perm (List.mergeSort_perm ..).symm (by simp [BEq.comm]))
+  refine perm.eq_of_pairwise ?_ (pairwise a) (pairwise b)
+  intro _ _ _ _ h h'
+  simp only [decide_eq_true_eq] at h h'
+  have := le_antisymm h.1 h'.1
+  simp_all
+
 instance [DecidableEq κ] [Hashable κ] [DecidableEq σ] : DecidableEq (AssociateState κ σ) := inferInstance
 
 structure AssociateInterpretation (κ γ : Type*) where
@@ -28,7 +47,7 @@ def associateₜ [PartialOrder τ] (κ : Type*) [DecidableEq κ] [Hashable κ] [
       )
     interpret s := {
       map k := c.interpret (s.getD k 0)
-      toList := [] -- TODO (only for interpretation, not used in benchmarks)
+      toList := s.map (λ _ ↦ c.interpret) |> Std.ExtHashMap.toListSorted
     }
     commutative e₁ e₂ con := by {
       funext s
@@ -67,7 +86,7 @@ def associate (κ : Type*) [DecidableEq κ] [Hashable κ] [DecidableEq σ] [Zero
       )
     interpret s := {
       map k := c.interpret (s.getD k 0)
-      toList := [] -- TODO (only for interpretation, not used in benchmarks)
+      toList := s.map (λ _ ↦ c.interpret) |> Std.ExtHashMap.toListSorted
     }
     commutative e₁ e₂ := by {
       funext s
