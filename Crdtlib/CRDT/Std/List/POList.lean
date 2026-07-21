@@ -44,7 +44,7 @@ inductive ListOp (σ : Type*) where
 variable (σ : Type*) [Hashable σ] [DecidableEq σ] [Zero σ]
 
 def edges
-  : CRDT (σ × σ × σ) (AssociateState σ (GSet σ)) (AssociateInterpretation σ (SetInterpretation σ))
+  : CRDT (σ × σ × σ) (Associate σ (GSet σ)) (AssociateInterpretation σ (SetInterpretation σ))
   := traverse
     (λ ⟨prev, elem, next⟩ ↦ [⟨prev, elem⟩, ⟨elem, next⟩])
     (associate σ (gset σ))
@@ -54,7 +54,7 @@ def edges
 --   := edges σ
 
 
-abbrev POListState := (AssociateState σ ℤ) × (AssociateState σ (GSet σ))
+abbrev POListState := (Associate σ ℤ) × (Associate σ (GSet σ))
 
 instance : DecidableEq (POListState σ) := inferInstance
 
@@ -89,7 +89,7 @@ inductive ValueListOp (χ ω : Type*) where
 variable (χ : Type u) [DecidableEq χ]
 
 def po_list_with_values [LinearOrder χ] [Bot χ] [Zero χ] [Hashable χ] [Zero σ] [DecidableEq σ] (c : CRDT ω σ γ)
-  : CRDT (ValueListOp χ ω) (AssociateState χ σ × POListState χ) (List (χ × γ))
+  : CRDT (ValueListOp χ ω) (Associate χ σ × POListState χ) (List (χ × γ))
   := id
     $ map_interpretation (λ ⟨g, l⟩ ↦ l.map (λ x ↦ ⟨x, g.map x⟩))
     $ map_op (λ op ↦ match op with
@@ -99,7 +99,7 @@ def po_list_with_values [LinearOrder χ] [Bot χ] [Zero χ] [Hashable χ] [Zero 
     $ disjoint_product (associate χ c) (po_list χ)
 
 def po_list_with_valuesₜ [PartialOrder τ] [LinearOrder χ] [Bot χ] [Zero χ] [Hashable χ] [Zero σ] [DecidableEq σ] (c : CRDTₜ τ ω σ γ)
-  : CRDTₜ τ (ValueListOp χ ω) (AssociateState χ σ × POListState χ) (List (χ × γ))
+  : CRDTₜ τ (ValueListOp χ ω) (Associate χ σ × POListState χ) (List (χ × γ))
   := id
     $ map_interpretationₜ (λ ⟨g, l⟩ ↦ l.map (λ x ↦ ⟨x, g.map x⟩))
     $ map_opₜ (λ op ↦ match op with

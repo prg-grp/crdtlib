@@ -5,7 +5,7 @@ import Crdtlib.Combinator.Principal.MapInterpretation
 import Crdtlib.Combinator.Derived.MapOp
 
 def pnset (σ : Type*) [DecidableEq σ] [Hashable σ]
-  : CRDT (SetOp σ) (AssociateState σ Int) (SetInterpretation σ)
+  : CRDT (SetOp σ) (Associate σ Int) (SetInterpretation σ)
   := map_op (λ op ↦ match op with
         | .add elem => ⟨elem, 1⟩
         | .remove elem => ⟨elem, -1⟩)

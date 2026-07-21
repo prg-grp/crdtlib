@@ -10,7 +10,7 @@ open Prod Pkg
 instance [DecidableEq κ] [Hashable κ] : Zero $ Std.ExtHashMap κ σ where
   zero := Std.ExtHashMap.emptyWithCapacity 8
 
-abbrev AssociateState (κ σ : Type*) [DecidableEq κ] [Hashable κ]
+abbrev Associate (κ σ : Type*) [DecidableEq κ] [Hashable κ]
   := Std.ExtHashMap κ σ
 
 def Std.ExtHashMap.toListSorted
@@ -32,7 +32,7 @@ where finally
   have := le_antisymm h.1 h'.1
   simp_all
 
-instance [DecidableEq κ] [Hashable κ] [DecidableEq σ] : DecidableEq (AssociateState κ σ) := inferInstance
+instance [DecidableEq κ] [Hashable κ] [DecidableEq σ] : DecidableEq (Associate κ σ) := inferInstance
 
 structure AssociateInterpretation (κ γ : Type*) where
   map : κ → γ
@@ -40,7 +40,7 @@ structure AssociateInterpretation (κ γ : Type*) where
   toList [LinearOrder κ] : List (κ × γ)
 
 def associateₜ [PartialOrder τ] (κ : Type*) [DecidableEq κ] [Hashable κ] [DecidableEq σ] [Zero σ] (c : CRDTₜ τ ω σ γ)
-  : CRDTₜ τ (κ × ω) (AssociateState κ σ) (AssociateInterpretation κ γ) := {
+  : CRDTₜ τ (κ × ω) (Associate κ σ) (AssociateInterpretation κ γ) := {
     effect e s :=
       s.alter e.v.fst (λ x ↦
         .guard (· ≠ 0) (c.effect (map snd e) (x.getD 0))
@@ -79,7 +79,7 @@ def associateₜ [PartialOrder τ] (κ : Type*) [DecidableEq κ] [Hashable κ] [
   }
 
 def associate (κ : Type*) [DecidableEq κ] [Hashable κ] [DecidableEq σ] [Zero σ] (c : CRDT ω σ γ)
-  : CRDT (κ × ω) (AssociateState κ σ) (AssociateInterpretation κ γ) := {
+  : CRDT (κ × ω) (Associate κ σ) (AssociateInterpretation κ γ) := {
     effect e s :=
       s.alter e.fst (λ x ↦
         .guard (· ≠ 0) (c.effect e.snd (x.getD 0))
