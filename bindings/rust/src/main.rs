@@ -3,7 +3,7 @@ mod lean_rt;
 
 use crdt::basic::Crdt;
 use crdt::std::scalar::counter::{LeanCounter32, LeanCounter64};
-use crdt::std::set::ghashset::LeanGHashSet;
+use crdt::std::set::gset::LeanGSet;
 
 fn main() {
   lean_rt::init();
@@ -22,12 +22,12 @@ fn main() {
   let s2 = LeanCounter32::effect(7, s1);
   println!("Counter32: 3 + 7 = {}", LeanCounter32::interpret(s2));
 
-  let s0 = LeanGHashSet::empty();
-  let s1 = LeanGHashSet::effect(42, s0);
-  let s2 = LeanGHashSet::effect(17, s1);
-  let g = LeanGHashSet::interpret(s2);
+  let s0 = LeanGSet::empty();
+  let s1 = LeanGSet::effect(42, s0);
+  let s2 = LeanGSet::effect(17, s1);
+  let g = LeanGSet::interpret(s2);
 
-  println!("GHashSet contains:");
+  println!("GSet contains:");
   println!("  42: {}", g.mem(42));
   println!("  17: {}", g.mem(17));
   println!("   0: {}", g.mem(0));

@@ -9,12 +9,12 @@ section MonotonicDag
 variable (σ : Type*) [Hashable σ] [DecidableEq σ]
 
 -- structure TPGraphState where
---   verticiesAdded : GHashSetState σ
---   edgesAdded : GHashSetState (σ × σ)
---   verticiesRemoved : GHashSetState σ
---   edgesRemoved : GHashSetState (σ × σ)
+--   verticiesAdded : GSet σ
+--   edgesAdded : GSet (σ × σ)
+--   verticiesRemoved : GSet σ
+--   edgesRemoved : GSet (σ × σ)
 
-def MonotonicDagState := (GHashSetState σ) × (GHashSetState (σ × σ))
+def MonotonicDagState := (GSet σ) × (GSet (σ × σ))
 
 inductive MonotonicDagOp where
   | addEdge (edge : σ × σ)
@@ -28,4 +28,4 @@ def monotonic_dag [Zero σ] : CRDT (MonotonicDagOp σ) (MonotonicDagState σ) (D
       )
     $ map_interpretation (λ ⟨vertices, edges⟩ ↦
       ⟨⟨vertices.mem, λ e@⟨e₁, e₂⟩ ↦ vertices.mem e₁ ∧ vertices.mem e₂ ∧ edges.mem e⟩, sorry⟩)
-    $ disjoint_product (ghashset σ) (ghashset (σ × σ))
+    $ disjoint_product (gset σ) (gset (σ × σ))

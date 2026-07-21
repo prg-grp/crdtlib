@@ -1,5 +1,5 @@
 import Crdtlib.CRDT.Primitive.ACFun
-import Crdtlib.CRDT.Std.Set.GHashSet
+import Crdtlib.CRDT.Std.Set.GSet
 import Crdtlib.CRDT.Std.Set.PNSet
 import Crdtlib.Combinator.Principal.Associate
 import Crdtlib.Combinator.Derived.MapOp
@@ -44,17 +44,17 @@ inductive ListOp (σ : Type*) where
 variable (σ : Type*) [Hashable σ] [DecidableEq σ] [Zero σ]
 
 def edges
-  : CRDT (σ × σ × σ) (AssociateState σ (GHashSetState σ)) (AssociateInterpretation σ (SetInterpretation σ))
+  : CRDT (σ × σ × σ) (AssociateState σ (GSet σ)) (AssociateInterpretation σ (SetInterpretation σ))
   := traverse
     (λ ⟨prev, elem, next⟩ ↦ [⟨prev, elem⟩, ⟨elem, next⟩])
-    (associate σ (ghashset σ))
+    (associate σ (gset σ))
 
 -- def edges'
 --   : CRDT (σ × σ × σ) (Std.ExtHashMap σ (Std.ExtHashMap σ Bool)) (σ → (Std.ExtHashMap σ Bool))
 --   := edges σ
 
 
-abbrev POListState := (AssociateState σ ℤ) × (AssociateState σ (GHashSetState σ))
+abbrev POListState := (AssociateState σ ℤ) × (AssociateState σ (GSet σ))
 
 instance : DecidableEq (POListState σ) := inferInstance
 

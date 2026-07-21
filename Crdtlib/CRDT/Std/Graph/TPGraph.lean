@@ -9,10 +9,10 @@ section TPGraph
 variable (σ : Type*) [Hashable σ] [DecidableEq σ]
 
 -- structure TPGraphState where
---   verticiesAdded : GHashSetState σ
---   edgesAdded : GHashSetState (σ × σ)
---   verticiesRemoved : GHashSetState σ
---   edgesRemoved : GHashSetState (σ × σ)
+--   verticiesAdded : GSet σ
+--   edgesAdded : GSet (σ × σ)
+--   verticiesRemoved : GSet σ
+--   edgesRemoved : GSet (σ × σ)
 
 def TPGraphState := (TPSetState σ) × (TPSetState (σ × σ))
 

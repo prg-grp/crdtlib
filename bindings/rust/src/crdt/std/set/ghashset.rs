@@ -5,72 +5,72 @@ use std::marker::PhantomData;
 mod ffi {
   use crate::lean_rt::LeanObj;
   unsafe extern "C" {
-    pub static ghashset_empty_u64: LeanObj;
-    pub fn ghashset_effect_u64(event: u64, state: LeanObj) -> LeanObj;
-    pub fn ghashset_interpret_mem_u64(key: u64, state: LeanObj) -> u8;
+    pub static gset_empty_u64: LeanObj;
+    pub fn gset_effect_u64(event: u64, state: LeanObj) -> LeanObj;
+    pub fn gset_interpret_mem_u64(key: u64, state: LeanObj) -> u8;
   }
 }
 
-pub struct GHashSetState(LeanObj);
+pub struct GSetState(LeanObj);
 
-impl Clone for GHashSetState {
+impl Clone for GSetState {
   fn clone(&self) -> Self {
     lean_inc_ref(self.0);
-    GHashSetState(self.0)
+    GSetState(self.0)
   }
 }
 
-impl Drop for GHashSetState {
+impl Drop for GSetState {
   fn drop(&mut self) {
     lean_dec_ref(self.0);
   }
 }
 
-unsafe impl Send for GHashSetState {}
-unsafe impl Sync for GHashSetState {}
+unsafe impl Send for GSet {}
+unsafe impl Sync for GSet {}
 
-pub struct GHashSetInterpretation<T>(LeanObj, PhantomData<T>);
+pub struct GSetInterpretation<T>(LeanObj, PhantomData<T>);
 
-impl GHashSetInterpretation<u64> {
+impl GSetInterpretation<u64> {
   pub fn mem(&self, key: u64) -> bool {
     unsafe {
       lean_inc_ref(self.0);
-      ffi::ghashset_interpret_mem_u64(key, self.0) != 0
+      ffi::gset_interpret_mem_u64(key, self.0) != 0
     }
   }
 }
 
-pub trait GHashSet:
-  Crdt<Op = u64, State = GHashSetState, Interp = GHashSetInterpretation<u64>>
+pub trait GSet:
+  Crdt<Op = u64, State = GSet, Interp = GSetInterpretation<u64>>
 {
 }
 
-pub struct LeanGHashSet;
+pub struct LeanGSet;
 
-impl Crdt for LeanGHashSet {
+impl Crdt for LeanGSet {
   type Op = u64;
-  type State = GHashSetState;
-  type Interp = GHashSetInterpretation<u64>;
+  type State = GSet;
+  type Interp = GSetInterpretation<u64>;
 
-  fn effect(event: u64, state: GHashSetState) -> GHashSetState {
+  fn effect(event: u64, state: GSet) -> GSet {
     let raw = state.0;
     std::mem::forget(state);
-    GHashSetState(unsafe { ffi::ghashset_effect_u64(event, raw) })
+    GSet(unsafe { ffi::gset_effect_u64(event, raw) })
   }
 
-  fn interpret(state: GHashSetState) -> GHashSetInterpretation<u64> {
+  fn interpret(state: GSet) -> GSetInterpretation<u64> {
     lean_inc_ref(state.0);
-    GHashSetInterpretation(state.0, PhantomData)
+    GSetInterpretation(state.0, PhantomData)
   }
 }
 
-impl GHashSet for LeanGHashSet {}
+impl GSet for LeanGSet {}
 
-impl LeanGHashSet {
-  pub fn empty() -> GHashSetState {
+impl LeanGSet {
+  pub fn empty() -> GSet {
     unsafe {
-      lean_inc_ref(ffi::ghashset_empty_u64);
-      GHashSetState(ffi::ghashset_empty_u64)
+      lean_inc_ref(ffi::gset_empty_u64);
+      GSet(ffi::gset_empty_u64)
     }
   }
 }

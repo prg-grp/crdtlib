@@ -8,7 +8,7 @@ unsafe extern "C" {
   fn lean_dec_ref_cold(o: LeanObj);
 
   fn initialize_crdtlib_Crdtlib_CRDT_Std_Scalar_Counter(builtin: u8) -> LeanObj;
-  fn initialize_crdtlib_Crdtlib_CRDT_Std_Set_GHashSet(builtin: u8) -> LeanObj;
+  fn initialize_crdtlib_Crdtlib_CRDT_Std_Set_GSet(builtin: u8) -> LeanObj;
 }
 
 #[inline(always)]
@@ -79,7 +79,7 @@ pub fn init() {
   unsafe {
     lean_initialize();
     run_initializer(initialize_crdtlib_Crdtlib_CRDT_Std_Scalar_Counter);
-    run_initializer(initialize_crdtlib_Crdtlib_CRDT_Std_Set_GHashSet);
+    run_initializer(initialize_crdtlib_Crdtlib_CRDT_Std_Set_GSet);
     lean_io_mark_end_initialization();
   }
 }
