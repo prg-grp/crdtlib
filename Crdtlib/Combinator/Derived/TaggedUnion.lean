@@ -5,10 +5,7 @@ import Crdtlib.Combinator.Derived.DisjointProduct
 
 section TaggedSum
 
-inductive Choice
-| left : Choice
-| right : Choice
-deriving Hashable
+inductive Choice | left | right deriving Hashable
 
 instance choiceLinearOrder : LinearOrder Choice where
   le x y := match x, y with
