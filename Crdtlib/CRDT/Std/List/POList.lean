@@ -19,7 +19,7 @@ instance : Zero (Finset α) where
 
 private def po_traversal {σ : Type*}
     [DecidableEq σ] [LinearOrder σ] [Bot σ] [Hashable σ]
-    (s : SetInterpretation σ × AssociateInterpretation σ (SetInterpretation σ))
+    (s : SetInterp σ × AssociateInterp σ (SetInterp σ))
     : List σ :=
   let ⟨live, adj⟩ := s
   let succs : σ → List σ := λ v ↦ (adj.map v).toList.reverse
@@ -43,8 +43,16 @@ inductive ListOp (σ : Type*) where
 
 variable (σ : Type*) [Hashable σ] [DecidableEq σ] [Zero σ]
 
+structure POL.Insert where
+  prev : σ
+  elem : σ
+  next : σ
+
+structure POL.Delete where
+  elem : σ
+
 def edges
-  : CRDT (σ × σ × σ) (Associate σ (GSet σ)) (AssociateInterpretation σ (SetInterpretation σ))
+  : CRDT (POL.Insert σ) (Associate σ (GSet σ)) (AssociateInterp σ (SetInterp σ))
   := traverse
     (λ ⟨prev, elem, next⟩ ↦ [⟨prev, elem⟩, ⟨elem, next⟩])
     (associate σ (gset σ))
@@ -52,7 +60,6 @@ def edges
 -- def edges'
 --   : CRDT (σ × σ × σ) (Std.ExtHashMap σ (Std.ExtHashMap σ Bool)) (σ → (Std.ExtHashMap σ Bool))
 --   := edges σ
-
 
 abbrev POListState := (Associate σ ℤ) × (Associate σ (GSet σ))
 
@@ -74,6 +81,35 @@ def po_list [LinearOrder σ] [Bot σ] [Zero σ] [Hashable σ]
 def po_listₜ {τ : Type} [PartialOrder τ] [LinearOrder σ] [Bot σ] [Zero σ] [Hashable σ]
   : CRDTₜ τ (ListOp σ) (POListState σ) (List σ)
   := (po_list σ).toCRDTₜ τ
+
+private def POL.po_traversal {σ : Type*}
+    [DecidableEq σ] [LinearOrder σ] [Bot σ] [Hashable σ]
+    (s : (SetInterp σ × AssociateInterp σ (SetInterp σ)) × SetInterp σ)
+    : List σ :=
+  let ⟨⟨add, adj⟩, rem⟩ := s
+  let live : σ → Bool := λ v ↦ add.mem v && !(rem.mem v)
+  let succs : σ → List σ := λ v ↦ (adj.map v).toList.reverse
+  let bound : ℕ := 1 + adj.toList.foldl (λ n kv ↦ n + kv.snd.toList.length) 0
+  let rec go (fuel : ℕ) (visited out : List σ) (v : σ) : List σ × List σ :=
+    match fuel with
+    | 0 => (visited, out)
+    | fuel + 1 =>
+      let (visited', out') :=
+        (succs v).foldl
+          (λ acc w ↦
+            if acc.fst.contains w then acc
+            else go fuel (w :: acc.fst) acc.snd w)
+          (visited, out)
+      (visited', if live v ∧ v ≠ ⊥ then v :: out' else out')
+  (go bound [⊥] [] ⊥).snd
+
+-- We use the PNSet (the other) version for automerge because it is more efficient
+def POL.list [LinearOrder σ] [Bot σ] [Hashable σ]
+  : CRDT (Insert σ ⊕ Delete σ) ((GSet σ × Associate σ (GSet σ)) × (GSet σ)) (List σ)
+  := map_interpretation POL.po_traversal
+    (disjoint_product
+      (map_op (λ ⟨p, v, n⟩ ↦ ⟨v, ⟨p, v, n⟩⟩) (joint_product (gset σ) (edges σ)))
+      (map_op (λ ⟨o⟩ ↦ o) (gset σ)))
 
 end POList
 

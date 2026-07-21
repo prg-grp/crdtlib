@@ -15,7 +15,7 @@ instance : Zero $ GSet σ where
   zero := Std.ExtHashMap.emptyWithCapacity 8
 
 def gset
-  : CRDT σ (GSet σ) (SetInterpretation σ)
+  : CRDT σ (GSet σ) (SetInterp σ)
   := map_op (λ x ↦ ⟨x, 1⟩)
     $ map_interpretation (λ s ↦ {
         mem := (· > 0) ∘ s.map

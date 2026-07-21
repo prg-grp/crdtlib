@@ -9,13 +9,13 @@ inductive SetOp where
   | add (elem : σ)
   | remove (elem : σ)
 
-structure SetInterpretation where
+structure SetInterp where
   /-- Test set membership -/
   mem : σ → Bool
   /-- Enumerate elements in the canonical order induced by `LinearOrder σ`. -/
   toList [LinearOrder σ] : List σ
 
--- namespace SetInterpretation
+-- namespace SetInterp
 -- variable [DecidableEq σ] [LinearOrder σ]
 
 -- private instance instAddCommMonoid' {α : Type*} : AddCommMonoid (Multiset α) where
@@ -28,8 +28,8 @@ structure SetInterpretation where
 --   nsmul := nsmulRec
 
 -- /-- Enumerate elements in the canonical order induced by `LinearOrder σ`. -/
--- def toList (s : SetInterpretation σ) : List σ :=
+-- def toList (s : SetInterp σ) : List σ :=
 --   (s.fold (· + ·) (0 : Multiset σ) ({·})).sort (· ≤ ·)
 
--- end SetInterpretation
+-- end SetInterp
 end SetBasic

@@ -29,9 +29,9 @@ impl Drop for GSetState {
 unsafe impl Send for GSet {}
 unsafe impl Sync for GSet {}
 
-pub struct GSetInterpretation<T>(LeanObj, PhantomData<T>);
+pub struct GSetInterp<T>(LeanObj, PhantomData<T>);
 
-impl GSetInterpretation<u64> {
+impl GSetInterp<u64> {
   pub fn mem(&self, key: u64) -> bool {
     unsafe {
       lean_inc_ref(self.0);
@@ -41,7 +41,7 @@ impl GSetInterpretation<u64> {
 }
 
 pub trait GSet:
-  Crdt<Op = u64, State = GSet, Interp = GSetInterpretation<u64>>
+  Crdt<Op = u64, State = GSet, Interp = GSetInterp<u64>>
 {
 }
 
@@ -50,7 +50,7 @@ pub struct LeanGSet;
 impl Crdt for LeanGSet {
   type Op = u64;
   type State = GSet;
-  type Interp = GSetInterpretation<u64>;
+  type Interp = GSetInterp<u64>;
 
   fn effect(event: u64, state: GSet) -> GSet {
     let raw = state.0;
@@ -58,9 +58,9 @@ impl Crdt for LeanGSet {
     GSet(unsafe { ffi::gset_effect_u64(event, raw) })
   }
 
-  fn interpret(state: GSet) -> GSetInterpretation<u64> {
+  fn interpret(state: GSet) -> GSetInterp<u64> {
     lean_inc_ref(state.0);
-    GSetInterpretation(state.0, PhantomData)
+    GSetInterp(state.0, PhantomData)
   }
 }
 

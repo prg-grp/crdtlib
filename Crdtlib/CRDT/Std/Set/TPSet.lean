@@ -10,7 +10,7 @@ variable (σ : Type*) [Hashable σ] [DecidableEq σ]
 
 def TPSetState := (GSet σ × GSet σ)
 
-def tpset [DecidableEq σ] [Hashable σ] [Zero σ] : CRDT (SetOp σ) (TPSetState σ) (SetInterpretation σ) :=
+def tpset [DecidableEq σ] [Hashable σ] [Zero σ] : CRDT (SetOp σ) (TPSetState σ) (SetInterp σ) :=
   map_interpretation
     (λ ⟨addSet, removeSet⟩ ↦ {
       mem k := addSet.mem k ∧ ¬ removeSet.mem k

@@ -34,13 +34,13 @@ where finally
 
 instance [DecidableEq κ] [Hashable κ] [DecidableEq σ] : DecidableEq (Associate κ σ) := inferInstance
 
-structure AssociateInterpretation (κ γ : Type*) where
+structure AssociateInterp (κ γ : Type*) where
   map : κ → γ
   /-- Enumerate elements in the canonical order induced by `LinearOrder σ`. -/
   toList [LinearOrder κ] : List (κ × γ)
 
 def associateₜ [PartialOrder τ] (κ : Type*) [DecidableEq κ] [Hashable κ] [DecidableEq σ] [Zero σ] (c : CRDTₜ τ ω σ γ)
-  : CRDTₜ τ (κ × ω) (Associate κ σ) (AssociateInterpretation κ γ) := {
+  : CRDTₜ τ (κ × ω) (Associate κ σ) (AssociateInterp κ γ) := {
     effect e s :=
       s.alter e.v.fst (λ x ↦
         .guard (· ≠ 0) (c.effect (map snd e) (x.getD 0))
@@ -79,7 +79,7 @@ def associateₜ [PartialOrder τ] (κ : Type*) [DecidableEq κ] [Hashable κ] [
   }
 
 def associate (κ : Type*) [DecidableEq κ] [Hashable κ] [DecidableEq σ] [Zero σ] (c : CRDT ω σ γ)
-  : CRDT (κ × ω) (Associate κ σ) (AssociateInterpretation κ γ) := {
+  : CRDT (κ × ω) (Associate κ σ) (AssociateInterp κ γ) := {
     effect e s :=
       s.alter e.fst (λ x ↦
         .guard (· ≠ 0) (c.effect e.snd (x.getD 0))
