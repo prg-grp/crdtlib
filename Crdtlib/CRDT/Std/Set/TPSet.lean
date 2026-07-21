@@ -14,7 +14,7 @@ def tpset [DecidableEq σ] [Hashable σ] [Zero σ] : CRDT (SetOp σ) (TPSetState
   map_interpretation
     (λ ⟨addSet, removeSet⟩ ↦ {
       mem k := addSet.mem k ∧ ¬ removeSet.mem k
-      toList := []
+      toList := addSet.toList.filter (¬ removeSet.mem ·)
     })
     (map_op
       (λ op ↦ match op with
