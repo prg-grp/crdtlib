@@ -1,27 +1,19 @@
 import Crdtlib.CRDT.Std.LWW.MVLWW
 import Crdtlib.Combinator.Principal.MapInterpretation
+import Crdtlib.Combinator.Principal.MapState
 import Crdtlib.Combinator.Principal.Traverse
 import Crdtlib.Combinator.Derived.DisjointProduct
 
 section TaggedSum
 
-inductive Choice | left | right deriving Hashable
+inductive Choice | left | right deriving Hashable, DecidableEq
 
-instance choiceLinearOrder : LinearOrder Choice where
-  le x y := match x, y with
-    | Choice.left, Choice.right => True
-    | Choice.right, Choice.right => True
-    | Choice.right, Choice.left => False
-    | Choice.left, Choice.left => True
-  lt x y := match x, y with
-    | Choice.left, Choice.right => True
-    | _, _ => false
-  le_refl x := by cases x <;> simp
-  le_trans x y z := by cases x <;> cases y <;> cases z <;> simp
-  le_antisymm x y := by cases x <;> cases y <;> simp
-  le_total x y := by cases x <;> cases y <;> simp
-  toDecidableLE x y := by cases x <;> cases y <;> (first | apply instDecidableTrue | apply instDecidableFalse)
-  lt_iff_le_not_ge x y := by cases x <;> cases y <;> simp
+def Choice.toFin : Choice → Fin 2
+  | .left => 0
+  | .right => 1
+
+instance : LinearOrder Choice :=
+  LinearOrder.lift' Choice.toFin (λ a b h ↦ by cases a <;> cases b <;> simp_all [Choice.toFin])
 
 instance tagged_union_zero_choice : Zero Choice where
   zero := Choice.left
@@ -43,3 +35,16 @@ def auto_tagged_unionₜ [PartialOrder τ] [DecidableLT τ] [DecidableEq τ]
         | l@(.inl _) => [Sum.inl l, Sum.inr Choice.left]
         | r@(.inr _) => [Sum.inl r, Sum.inr Choice.right]
     ) (tagged_unionₜ c₁ c₂)
+
+def tagged_union_3 [PartialOrder τ] [DecidableLT τ] [DecidableEq τ]
+  (c₁ : CRDTₜ τ ω₁ σ₁ γ₁) (c₂ : CRDTₜ τ ω₂ σ₂ γ₂) (c₃ : CRDTₜ τ ω₃ σ₃ γ₃)
+  : CRDTₜ τ ((((ω₁ ⊕ ω₂) ⊕ Choice) ⊕ ω₃) ⊕ Choice)
+           ((σ₁ × σ₂ × σ₃) × Finset (Event τ Choice) × Finset (Event τ Choice))
+           (((γ₁ ⊕ γ₂) ⊕ γ₃))
+  := map_stateₜ
+      -- f : source → target
+      (λ ⟨⟨⟨⟨s1, s2⟩, inner⟩, s3⟩, outer⟩ ↦ (⟨s1, s2, s3⟩, inner, outer))
+      -- f' : target → source
+      (λ ⟨⟨s1, s2, s3⟩, inner, outer⟩ ↦ (⟨⟨⟨s1, s2⟩, inner⟩, s3⟩, outer))
+      (by rfl)
+      (tagged_unionₜ (tagged_unionₜ c₁ c₂) c₃)
