@@ -43,7 +43,7 @@ def associateₜ [PartialOrder τ] (κ : Type*) [DecidableEq κ] [Hashable κ] [
   : CRDTₜ τ (κ × ω) (Associate κ σ) (AssociateInterp κ γ) := {
     effect e s :=
       s.alter e.v.fst (λ x ↦
-        .guard (· ≠ 0) (c.effect (map snd e) (x.getD 0))
+        some $ c.effect (map snd e) (x.getD 0)
       )
     interpret s := {
       map k := c.interpret (s.getD k 0)
@@ -54,21 +54,15 @@ def associateₜ [PartialOrder τ] (κ : Type*) [DecidableEq κ] [Hashable κ] [
       apply Std.ExtHashMap.ext_getElem?
       intro k
       simp [Std.ExtHashMap.getElem?_alter]
-      unfold Pkg.map Option.guard
+      unfold Pkg.map
       by_cases h₁ : e₁.v.fst = k <;> by_cases h₂ : e₂.v.fst = k
       . rw [if_pos h₁, if_pos h₂]
         subst h₂
-        iterate 2 rw [if_pos h₁]
-        iterate 2 repeat rw [if_pos h₁.symm]
-        have helper : ∀ x : σ, (if (!decide (x = 0)) = true then some x else none).getD 0 = x := by {
-          intro x
-          by_cases h : x = 0 <;> simp [h]
-        }
-        simp only [helper]
-        rw [← h₁]
-        have key := congr_fun (c.commutative (map snd e₁) (map snd e₂) con) (s[e₁.v.fst]?.getD 0)
-        simp only [Function.comp_apply] at key
-        rw [key]
+        repeat rw [if_pos h₁]
+        repeat rw [if_pos h₁.symm]
+        simp only [Option.getD_some, Option.some.injEq]
+        rw [h₁]
+        exact congr_fun (c.commutative (map snd e₁) (map snd e₂) con) _
       . subst h₁
         repeat rw [if_neg h₂]
       . subst h₂
@@ -82,7 +76,7 @@ def associate (κ : Type*) [DecidableEq κ] [Hashable κ] [DecidableEq σ] [Zero
   : CRDT (κ × ω) (Associate κ σ) (AssociateInterp κ γ) := {
     effect e s :=
       s.alter e.fst (λ x ↦
-        .guard (· ≠ 0) (c.effect e.snd (x.getD 0))
+        some $ c.effect e.2 (x.getD 0)
       )
     interpret s := {
       map k := c.interpret (s.getD k 0)
@@ -93,21 +87,14 @@ def associate (κ : Type*) [DecidableEq κ] [Hashable κ] [DecidableEq σ] [Zero
       apply Std.ExtHashMap.ext_getElem?
       intro k
       simp [Std.ExtHashMap.getElem?_alter]
-      unfold Option.guard
       by_cases h₁ : e₁.fst = k <;> by_cases h₂ : e₂.fst = k
       . rw [if_pos h₁, if_pos h₂]
         subst h₂
-        iterate 2 rw [if_pos h₁]
-        iterate 2 repeat rw [if_pos h₁.symm]
-        have helper : ∀ x : σ, (if (!decide (x = 0)) = true then some x else none).getD 0 = x := by {
-          intro x
-          by_cases h : x = 0 <;> simp [h]
-        }
-        simp only [helper]
-        rw [← h₁]
-        have key := congr_fun (c.commutative e₁.snd e₂.snd) (s[e₁.fst]?.getD 0)
-        simp only [Function.comp_apply] at key
-        rw [key]
+        repeat rw [if_pos h₁]
+        repeat rw [if_pos h₁.symm]
+        simp only [Option.getD_some, Option.some.injEq]
+        rw [h₁]
+        exact congr_fun (c.commutative e₁.snd e₂.snd) _
       . subst h₁
         repeat rw [if_neg h₂]
       . subst h₂
