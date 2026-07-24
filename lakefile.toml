@@ -1,4 +1,5 @@
 name = "crdtlib"
+defaultTargets = [ "Crdtlib" ]
 
 [[lean_lib]]
 name = "Crdtlib"
