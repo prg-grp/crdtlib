@@ -65,7 +65,7 @@ abbrev POListState := (Associate σ ℤ) × (Associate σ (GSet σ))
 
 instance : DecidableEq (POListState σ) := inferInstance
 
-def po_list [LinearOrder σ] [Bot σ] [Zero σ] [Hashable σ]
+def polist [LinearOrder σ] [Bot σ] [Zero σ] [Hashable σ]
   : CRDT (ListOp σ) (POListState σ) (List σ)
   := map_interpretation po_traversal
     $ traverse
@@ -78,9 +78,9 @@ def po_list [LinearOrder σ] [Bot σ] [Zero σ] [Hashable σ]
         (pnset σ)
         (edges σ))
 
-def po_listₜ {τ : Type} [PartialOrder τ] [LinearOrder σ] [Bot σ] [Zero σ] [Hashable σ]
+def polistₜ {τ : Type} [PartialOrder τ] [LinearOrder σ] [Bot σ] [Zero σ] [Hashable σ]
   : CRDTₜ τ (ListOp σ) (POListState σ) (List σ)
-  := (po_list σ).toCRDTₜ τ
+  := (polist σ).toCRDTₜ τ
 
 private def POL.po_traversal {σ : Type*}
     [DecidableEq σ] [LinearOrder σ] [Bot σ] [Hashable σ]
@@ -124,7 +124,7 @@ inductive ValueListOp (χ ω : Type*) where
 
 variable (χ : Type u) [DecidableEq χ]
 
-def po_list_with_values [LinearOrder χ] [Bot χ] [Zero χ] [Hashable χ] [Zero σ] [DecidableEq σ] (c : CRDT ω σ γ)
+def polist_with_values [LinearOrder χ] [Bot χ] [Zero χ] [Hashable χ] [Zero σ] [DecidableEq σ] (c : CRDT ω σ γ)
   : CRDT (ValueListOp χ ω) (Associate χ σ × POListState χ) (List (χ × γ))
   := id
     $ map_interpretation (λ ⟨g, l⟩ ↦ l.map (λ x ↦ ⟨x, g.map x⟩))
@@ -132,9 +132,9 @@ def po_list_with_values [LinearOrder χ] [Bot χ] [Zero χ] [Hashable χ] [Zero 
       | .mutate pos op => .inl ⟨pos, op⟩
       | .insert prev pos next => .inr $ .insert prev pos next
       | .remove pos => .inr $ .remove pos)
-    $ disjoint_product (associate χ c) (po_list χ)
+    $ disjoint_product (associate χ c) (polist χ)
 
-def po_list_with_valuesₜ [PartialOrder τ] [LinearOrder χ] [Bot χ] [Zero χ] [Hashable χ] [Zero σ] [DecidableEq σ] (c : CRDTₜ τ ω σ γ)
+def polist_with_valuesₜ [PartialOrder τ] [LinearOrder χ] [Bot χ] [Zero χ] [Hashable χ] [Zero σ] [DecidableEq σ] (c : CRDTₜ τ ω σ γ)
   : CRDTₜ τ (ValueListOp χ ω) (Associate χ σ × POListState χ) (List (χ × γ))
   := id
     $ map_interpretationₜ (λ ⟨g, l⟩ ↦ l.map (λ x ↦ ⟨x, g.map x⟩))
@@ -142,6 +142,6 @@ def po_list_with_valuesₜ [PartialOrder τ] [LinearOrder χ] [Bot χ] [Zero χ]
       | .mutate pos op => .inl ⟨pos, op⟩
       | .insert prev pos next => .inr $ .insert prev pos next
       | .remove pos => .inr $ .remove pos)
-    $ disjoint_productₜ (associateₜ χ c) (po_listₜ χ)
+    $ disjoint_productₜ (associateₜ χ c) (polistₜ χ)
 
 end POListWithValues

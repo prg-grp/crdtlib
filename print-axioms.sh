@@ -23,6 +23,6 @@ import Crdtlib
 #print axioms tpset
 #print axioms lww_element_set
 #print axioms pnset
-#print axioms or_set
-#print axioms po_list
+#print axioms orset
+#print axioms polist
 EOF

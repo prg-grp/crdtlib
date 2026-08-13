@@ -9,7 +9,7 @@ inductive OROp (σ tok : Type) where
   | add (elem : σ) (token : tok)
   | remove (observed : Finset (σ × tok))
 
-def or_set (σ tok : Type) [DecidableEq σ] [DecidableEq tok]
+def orset (σ tok : Type) [DecidableEq σ] [DecidableEq tok]
   : CRDT (OROp σ tok) (Finset (σ × tok) × Finset (σ × tok)) (Finset σ)
   := map_interpretation (λ ⟨addSet, tombstone⟩ ↦ (addSet \ tombstone).image Prod.fst)
       (map_op (λ | .add elem token => .inl {(elem, token)} | .remove observed => .inr observed)
