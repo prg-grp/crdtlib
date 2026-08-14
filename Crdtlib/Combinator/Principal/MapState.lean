@@ -5,7 +5,7 @@ section Iso
 
 open Pkg
 
-def map_stateₜ [PartialOrder τ] (f : σ₁ → σ₂) (f' : σ₂ → σ₁) (iso : f' ∘ f = id) (c : CRDTₜ τ ω σ₁ γ)
+def map_stateₜ [PartialOrder τ] (f : σ₁ → σ₂) (f' : σ₂ → σ₁) (i : f' ∘ f = id := by funext; simp) (c : CRDTₜ τ ω σ₁ γ)
   : CRDTₜ τ ω σ₂ γ
   := {
     effect e := f ∘ (c.effect e) ∘ f'
@@ -14,7 +14,7 @@ def map_stateₜ [PartialOrder τ] (f : σ₁ → σ₂) (f' : σ₂ → σ₁) 
       ext s
       have h : ∀ x, f' (f x) = x := by {
         intro x
-        have := congrFun iso x
+        have := congrFun i x
         simp at this
         exact this
       }
@@ -25,7 +25,7 @@ def map_stateₜ [PartialOrder τ] (f : σ₁ → σ₂) (f' : σ₂ → σ₁) 
     }
   }
 
-def map_state {σ₁ σ₂ ω γ} (f : σ₁ → σ₂) (f' : σ₂ → σ₁) (iso : f' ∘ f = id) (c : CRDT ω σ₁ γ)
+def map_state {σ₁ σ₂ ω γ} (f : σ₁ → σ₂) (f' : σ₂ → σ₁) (i : f' ∘ f = id := by funext; simp) (c : CRDT ω σ₁ γ)
   : CRDT ω σ₂ γ
   := {
     effect e := f ∘ (c.effect e) ∘ f'
@@ -34,7 +34,7 @@ def map_state {σ₁ σ₂ ω γ} (f : σ₁ → σ₂) (f' : σ₂ → σ₁) (
       ext s
       have h : ∀ x, f' (f x) = x := by {
         intro x
-        have := congrFun iso x
+        have := congrFun i x
         simp at this
         exact this
       }
