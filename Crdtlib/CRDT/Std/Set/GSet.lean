@@ -7,11 +7,9 @@ import Crdtlib.Combinator.Derived.MapOp
 
 section GSet
 
-variable (σ : Type*) [Hashable σ] [DecidableEq σ]
+abbrev GSet (σ : Type*) [Hashable σ] [DecidableEq σ]:= Associate σ ℕ
 
-abbrev GSet := Associate σ ℕ
-
-instance : Zero $ GSet σ where
+instance (σ : Type*) [Hashable σ] [DecidableEq σ] : Zero $ GSet σ where
   zero := Std.ExtHashMap.emptyWithCapacity 8
 
 def gset (σ : Type*) [Hashable σ] [DecidableEq σ] : CRDT σ (GSet σ) (SetInterp σ)
@@ -20,7 +18,7 @@ def gset (σ : Type*) [Hashable σ] [DecidableEq σ] : CRDT σ (GSet σ) (SetInt
       (map_op (λ x ↦ ⟨x, 1⟩)
         (associate σ gcounter))
 
-def gsetₜ (τ : Type) [PartialOrder τ]
+def gsetₜ [PartialOrder τ] (σ : Type*) [Hashable σ] [DecidableEq σ]
   : CRDTₜ τ σ (GSet σ) (SetInterp σ)
   := (gset σ).toCRDTₜ τ
 
