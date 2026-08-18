@@ -9,7 +9,7 @@ def mv_lwwₜ (σ : Type) [PartialOrder τ] [DecidableLT τ] [DecidableEq τ] [L
   := map_interpretationₜ
     (λ s ↦
       match (s.image (·.v)).max with
-        | .none => Zero.zero
+        | .none => 0
         | .some x => x
     )
     (mv_regₜ σ)
