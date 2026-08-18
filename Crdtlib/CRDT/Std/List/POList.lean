@@ -51,32 +51,25 @@ structure POL.Insert where
 structure POL.Delete where
   elem : σ
 
-def edges
-  : CRDT (POL.Insert σ) (Associate σ (GSet σ)) (AssociateInterp σ (SetInterp σ))
-  := traverse
-    (λ ⟨prev, elem, next⟩ ↦ [⟨prev, elem⟩, ⟨elem, next⟩])
-    (associate σ (gset σ))
+def edges : CRDT (σ × σ) (Associate σ (GSet σ)) (AssociateInterp σ (SetInterp σ)) :=
+  associate σ (gset σ)
 
--- def edges'
---   : CRDT (σ × σ × σ) (Std.ExtHashMap σ (Std.ExtHashMap σ Bool)) (σ → (Std.ExtHashMap σ Bool))
---   := edges σ
+def po_edges : CRDT (σ × σ × σ) (Associate σ (GSet σ)) (AssociateInterp σ (SetInterp σ)) :=
+  traverse (λ ⟨prev, elem, next⟩ ↦ [⟨prev, elem⟩, ⟨elem, next⟩]) (edges σ)
 
 abbrev POListState := (Associate σ ℤ) × (Associate σ (GSet σ))
 
 instance : DecidableEq (POListState σ) := inferInstance
 
-def polist [LinearOrder σ] [Bot σ] [Zero σ] [Hashable σ]
-  : CRDT (ListOp σ) (POListState σ) (List σ)
-  := map_interpretation po_traversal
-    $ traverse
-      (λ op ↦ match op with
+def polist [LinearOrder σ] [Bot σ] [Zero σ] [Hashable σ] : CRDT (ListOp σ) (POListState σ) (List σ) :=
+  map_interpretation po_traversal
+    $ traverse (λ
         | .insert prev elem next => [.inl $ .add elem, .inr ⟨prev, elem, next⟩]
-        | .remove elem => [.inl $ .remove elem]
-      )
+        | .remove elem => [.inl $ .remove elem])
     $ (disjoint_product
         -- add-nodes, edges
         (pnset σ)
-        (edges σ))
+        (po_edges σ))
 
 def polistₜ {τ : Type} [PartialOrder τ] [LinearOrder σ] [Bot σ] [Zero σ] [Hashable σ]
   : CRDTₜ τ (ListOp σ) (POListState σ) (List σ)
@@ -104,11 +97,11 @@ private def POL.po_traversal {σ : Type*}
   (go bound [⊥] [] ⊥).snd
 
 -- We use the PNSet (the other) version for automerge because it is more efficient
-def POL.list [LinearOrder σ] [Bot σ] [Hashable σ]
-  : CRDT (Insert σ ⊕ Delete σ) ((GSet σ × Associate σ (GSet σ)) × (GSet σ)) (List σ)
-  := map_interpretation POL.po_traversal
+def POL.polist [LinearOrder σ] [Bot σ] [Hashable σ] :
+    CRDT (Insert σ ⊕ Delete σ) ((GSet σ × Associate σ (GSet σ)) × (GSet σ)) (List σ) :=
+  map_interpretation po_traversal
     (disjoint_product
-      (map_op (λ ⟨p, v, n⟩ ↦ ⟨v, ⟨p, v, n⟩⟩) (joint_product (gset σ) (edges σ)))
+      (map_op (λ ⟨p, v, n⟩ ↦ ⟨v, ⟨p, v, n⟩⟩) (joint_product (gset σ) (po_edges σ)))
       (map_op (λ ⟨o⟩ ↦ o) (gset σ)))
 
 end POList
