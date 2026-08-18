@@ -6,6 +6,9 @@ deriving DecidableEq
 @[simp, reducible]
 def Event := Pkg
 
+@[simp, reducible]
+def Event.o (e : Event τ υ) := e.v
+
 instance [DecidableEq τ] [DecidableEq υ] : DecidableEq (Event τ υ) := inferInstance
 namespace Pkg
 

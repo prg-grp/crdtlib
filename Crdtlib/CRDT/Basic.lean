@@ -19,7 +19,7 @@ def CRDTₜ.of (τ : Type) [PartialOrder τ] (c : CRDTₜ τ ω σ γ) : CRDTₜ
 def CRDT.toCRDTₜ (τ : Type) [PartialOrder τ] (c : CRDT ω σ γ)
   : CRDTₜ τ ω σ γ
   := {
-    effect e := c.effect e.v
+    effect e := c.effect e.o
     interpret := c.interpret
-    commutative e₁ e₂ _ := c.commutative e₁.v e₂.v
+    commutative e₁ e₂ _ := c.commutative e₁.o e₂.o
   }

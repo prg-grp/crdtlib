@@ -42,7 +42,7 @@ structure AssociateInterp (κ γ : Type*) where
 def associateₜ [PartialOrder τ] (κ : Type*) [DecidableEq κ] [Hashable κ] [DecidableEq σ] [Zero σ] (c : CRDTₜ τ ω σ γ)
   : CRDTₜ τ (κ × ω) (Associate κ σ) (AssociateInterp κ γ) := {
     effect e s :=
-      s.alter e.v.fst (λ x ↦
+      s.alter e.o.fst (λ x ↦
         some $ c.effect (map snd e) (x.getD 0)
       )
     interpret s := {
@@ -55,7 +55,7 @@ def associateₜ [PartialOrder τ] (κ : Type*) [DecidableEq κ] [Hashable κ] [
       intro k
       simp [Std.ExtHashMap.getElem?_alter]
       unfold Pkg.map
-      by_cases h₁ : e₁.v.fst = k <;> by_cases h₂ : e₂.v.fst = k
+      by_cases h₁ : e₁.o.fst = k <;> by_cases h₂ : e₂.o.fst = k
       . rw [if_pos h₁, if_pos h₂]
         subst h₂
         repeat rw [if_pos h₁]

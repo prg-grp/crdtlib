@@ -144,10 +144,10 @@ private lemma foldr_comm_timed
 def traverseₜ [PartialOrder τ] (f : ω₂ → List ω₁) (c : CRDTₜ τ ω₁ σ γ)
   : CRDTₜ τ ω₂ σ γ
   := {
-    effect := λ e ↦ (f e.v).foldr (λ o ↦ c.effect ⟨e.t, o⟩)
+    effect := λ e ↦ (f e.o).foldr (λ o ↦ c.effect ⟨e.t, o⟩)
     interpret := c.interpret
     commutative e₁ e₂ con := by
       ext s
       simp only [Function.comp]
-      exact foldr_comm_timed c e₂.t e₁.t (con.symm) (f e₂.v) (f e₁.v) s
+      exact foldr_comm_timed c e₂.t e₁.t (con.symm) (f e₂.o) (f e₁.o) s
   }

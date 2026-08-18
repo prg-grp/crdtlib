@@ -8,7 +8,7 @@ def mv_lwwₜ (σ : Type) [PartialOrder τ] [DecidableLT τ] [DecidableEq τ] [L
   : CRDTₜ τ σ (Finset (Event τ σ)) σ
   := map_interpretationₜ
     (λ s ↦
-      match (s.image (·.v)).max with
+      match (s.image (·.o)).max with
         | .none => 0
         | .some x => x
     )
