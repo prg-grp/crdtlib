@@ -121,7 +121,7 @@ def polist_with_values [LinearOrder χ] [Bot χ] [Zero χ] [Hashable χ] [Zero �
   : CRDT (ValueListOp χ ω) (Associate χ σ × POListState χ) (List (χ × γ))
   := id
     $ map_interpretation (λ ⟨g, l⟩ ↦ l.map (λ x ↦ ⟨x, g.map x⟩))
-    $ map_op (λ op ↦ match op with
+    $ map_op (λ
       | .mutate pos op => .inl ⟨pos, op⟩
       | .insert prev pos next => .inr $ .insert prev pos next
       | .remove pos => .inr $ .remove pos)
@@ -131,7 +131,7 @@ def polist_with_valuesₜ [PartialOrder τ] [LinearOrder χ] [Bot χ] [Zero χ] 
   : CRDTₜ τ (ValueListOp χ ω) (Associate χ σ × POListState χ) (List (χ × γ))
   := id
     $ map_interpretationₜ (λ ⟨g, l⟩ ↦ l.map (λ x ↦ ⟨x, g.map x⟩))
-    $ map_opₜ (λ op ↦ match op with
+    $ map_opₜ (λ
       | .mutate pos op => .inl ⟨pos, op⟩
       | .insert prev pos next => .inr $ .insert prev pos next
       | .remove pos => .inr $ .remove pos)
