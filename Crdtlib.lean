@@ -16,7 +16,6 @@ import Crdtlib.CRDT.Basic
 import Crdtlib.CRDT.Pkg
 import Crdtlib.CRDT.Concurrent
 import Crdtlib.Combinator.Principal.Product
-import Crdtlib.Combinator.Principal.Filter
 import Crdtlib.Combinator.Principal.Traverse
 import Crdtlib.Combinator.Principal.Associate
 import Crdtlib.Combinator.Principal.MapInterpretation
