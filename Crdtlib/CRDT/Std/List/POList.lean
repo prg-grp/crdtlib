@@ -48,7 +48,7 @@ structure POL.Insert where
   elem : σ
   next : σ
 
-structure POL.Delete where
+structure POL.Remove where
   elem : σ
 
 def edges : CRDT (σ × σ) (Associate σ (GSet σ)) (AssociateInterp σ (SetInterp σ)) :=
@@ -98,7 +98,7 @@ private def POL.po_traversal {σ : Type*}
 
 -- We use the PNSet (the other) version for automerge because it is more efficient
 def POL.polist [LinearOrder σ] [Bot σ] [Hashable σ] :
-    CRDT (Insert σ ⊕ Delete σ) ((GSet σ × Associate σ (GSet σ)) × (GSet σ)) (List σ) :=
+    CRDT (Insert σ ⊕ Remove σ) ((GSet σ × Associate σ (GSet σ)) × (GSet σ)) (List σ) :=
   map_interpretation po_traversal
     (disjoint_product
       (map_op (λ ⟨p, v, n⟩ ↦ ⟨v, ⟨p, v, n⟩⟩) (joint_product (gset σ) (po_edges σ)))
