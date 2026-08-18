@@ -29,8 +29,8 @@ def tagged_unionₜ [PartialOrder τ] [DecidableLT τ] [DecidableEq τ] (c₁ : 
 def auto_tagged_unionₜ [PartialOrder τ] [DecidableLT τ] [DecidableEq τ] (c₁ : CRDTₜ τ ω₁ σ₁ γ₁) (c₂ : CRDTₜ τ ω₂ σ₂ γ₂) :
     CRDTₜ τ (ω₁ ⊕ ω₂) ((σ₁ × σ₂) × (Finset (Event τ Choice))) (γ₁ ⊕ γ₂) :=
   traverseₜ (λ
-      | l@(.inl _) => [Sum.inl l, Sum.inr Choice.left]
-      | r@(.inr _) => [Sum.inl r, Sum.inr Choice.right])
+      | l@(.inl _) => [.inl l, .inr .left]
+      | r@(.inr _) => [.inl r, .inr .right])
     (tagged_unionₜ c₁ c₂)
 
 def tagged_union_3 [PartialOrder τ] [DecidableLT τ] [DecidableEq τ]
