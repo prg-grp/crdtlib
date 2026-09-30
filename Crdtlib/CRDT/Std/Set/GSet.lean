@@ -7,20 +7,20 @@ import Crdtlib.Combinator.Derived.MapOp
 
 section GSet
 
-abbrev GSet (σ : Type*) [Hashable σ] [DecidableEq σ]:= Associate σ ℕ
+abbrev GSet (σ : Type*) [Hashable σ] [DecidableEq σ] := Associate σ ℕ
 
 instance (σ : Type*) [Hashable σ] [DecidableEq σ] : Zero $ GSet σ where
   zero := Std.ExtHashMap.emptyWithCapacity 8
 
-def gset (σ : Type*) [Hashable σ] [DecidableEq σ] : CRDT σ (GSet σ) (SetInterp σ)
-  := map_interpretation
-      (λ s ↦ { mem := (· > 0) ∘ s.map, toList := s.toList.filterMap λ ⟨k, v⟩ ↦ if v > 0 then .some k else .none })
-      (map_op (λ x ↦ ⟨x, 1⟩)
-        (associate σ gcounter))
+def gset (σ : Type*) [Hashable σ] [DecidableEq σ] : CRDT σ (GSet σ) (SetInterp σ) :=
+  map_interpretation
+    (λ s ↦ { mem := (· > 0) ∘ s.map, toList := s.toList.filterMap λ ⟨k, v⟩ ↦ if v > 0 then .some k else .none })
+    (map_op (λ x ↦ ⟨x, 1⟩)
+      (associate σ gcounter))
 
-def gsetₜ [PartialOrder τ] (σ : Type*) [Hashable σ] [DecidableEq σ]
-  : CRDTₜ τ σ (GSet σ) (SetInterp σ)
-  := (gset σ).toCRDTₜ τ
+def gsetₜ [PartialOrder τ] (σ : Type*) [Hashable σ] [DecidableEq σ] :
+    CRDTₜ τ σ (GSet σ) (SetInterp σ) :=
+  (gset σ).toCRDTₜ τ
 
 section GSetFFI
 

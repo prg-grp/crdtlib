@@ -8,8 +8,5 @@ instance [LinearOrder σ] : LinearOrder (Lamport σ) :=
     (λ x => toLex (x.t, x.s))
     (λ a b h => by obtain ⟨ta, sa⟩ := a; obtain ⟨tb, sb⟩ := b; simpa using h)
 
-def lww (σ : Type) [LinearOrder σ]
-  : CRDT (Lamport σ) (Lamport σ) (Lamport σ)
-  := join (Lamport σ)
-
+def lww (σ : Type) [LinearOrder σ] : CRDT (Lamport σ) (Lamport σ) (Lamport σ) := join (Lamport σ)
 def lwwₜ [LinearOrder τ] (σ : Type) [LinearOrder σ] := lww σ |>.toCRDTₜ τ

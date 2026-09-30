@@ -4,12 +4,10 @@ import Mathlib.Data.Finset.Max
 
 section LWW
 
-def mv_lwwₜ (σ : Type) [PartialOrder τ] [DecidableLT τ] [DecidableEq τ] [LinearOrder σ] [Zero σ]
-  : CRDTₜ τ σ (Finset (Event τ σ)) σ
-  := map_interpretationₜ
-    (λ s ↦
+def mv_lwwₜ (σ : Type) [PartialOrder τ] [DecidableLT τ] [DecidableEq τ] [LinearOrder σ] [Zero σ] :
+    CRDTₜ τ σ (Finset (Event τ σ)) σ :=
+  map_interpretationₜ (λ s ↦
       match (s.image (·.o)).max with
         | .none => 0
         | .some x => x
-    )
-    (mv_regₜ σ)
+    ) (mv_regₜ σ)

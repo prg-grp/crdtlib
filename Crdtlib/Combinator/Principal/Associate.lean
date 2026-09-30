@@ -10,8 +10,7 @@ open Prod Pkg
 instance [DecidableEq κ] [Hashable κ] : Zero $ Std.ExtHashMap κ σ where
   zero := Std.ExtHashMap.emptyWithCapacity 8
 
-abbrev Associate (κ σ : Type*) [DecidableEq κ] [Hashable κ]
-  := Std.ExtHashMap κ σ
+abbrev Associate (κ σ : Type*) [DecidableEq κ] [Hashable κ] := Std.ExtHashMap κ σ
 
 def Std.ExtHashMap.toListSorted
     [BEq α] [Hashable α] [LE α] [DecidableLE α] [Std.IsLinearOrder α]
@@ -39,67 +38,62 @@ structure AssociateInterp (κ γ : Type*) where
   /-- Enumerate elements in the canonical order induced by `LinearOrder σ`. -/
   toList [LinearOrder κ] : List (κ × γ)
 
-def associateₜ [PartialOrder τ] (κ : Type*) [DecidableEq κ] [Hashable κ] [DecidableEq σ] [Zero σ] (c : CRDTₜ τ ω σ γ)
-  : CRDTₜ τ (κ × ω) (Associate κ σ) (AssociateInterp κ γ) := {
-    effect e s :=
-      s.alter e.o.fst (λ x ↦
-        some $ c.effect (map snd e) (x.getD 0)
-      )
-    interpret s := {
-      map k := c.interpret (s.getD k 0)
-      toList := s.map (λ _ ↦ c.interpret) |> Std.ExtHashMap.toListSorted
-    }
-    commutative e₁ e₂ con := by {
-      funext s
-      apply Std.ExtHashMap.ext_getElem?
-      intro k
-      simp [Std.ExtHashMap.getElem?_alter]
-      unfold Pkg.map
-      by_cases h₁ : e₁.o.fst = k <;> by_cases h₂ : e₂.o.fst = k
-      . rw [if_pos h₁, if_pos h₂]
-        subst h₂
-        repeat rw [if_pos h₁]
-        repeat rw [if_pos h₁.symm]
-        simp only [Option.getD_some, Option.some.injEq]
-        rw [h₁]
-        exact congr_fun (c.commutative (map snd e₁) (map snd e₂) con) _
-      . subst h₁
-        repeat rw [if_neg h₂]
-      . subst h₂
-        repeat rw [if_neg h₁]
-      . repeat rw [if_neg h₁]
-        repeat rw [if_neg h₂]
-    }
+def associateₜ [PartialOrder τ] (κ : Type*) [DecidableEq κ] [Hashable κ] [DecidableEq σ] [Zero σ] (c : CRDTₜ τ ω σ γ) :
+    CRDTₜ τ (κ × ω) (Associate κ σ) (AssociateInterp κ γ) where
+  effect e s :=
+    s.alter e.o.fst λ x ↦
+      c.effect (map snd e) (x.getD 0) |> some
+  interpret s := {
+    map k := c.interpret (s.getD k 0)
+    toList := s.map (λ _ ↦ c.interpret) |> Std.ExtHashMap.toListSorted
   }
+  commutative e₁ e₂ con := by
+    funext s
+    apply Std.ExtHashMap.ext_getElem?
+    intro k
+    simp [Std.ExtHashMap.getElem?_alter]
+    unfold Pkg.map
+    by_cases h₁ : e₁.o.fst = k <;> by_cases h₂ : e₂.o.fst = k
+    . rw [if_pos h₁, if_pos h₂]
+      subst h₂
+      repeat rw [if_pos h₁]
+      repeat rw [if_pos h₁.symm]
+      simp only [Option.getD_some, Option.some.injEq]
+      rw [h₁]
+      exact congr_fun (c.commutative (map snd e₁) (map snd e₂) con) _
+    . subst h₁
+      repeat rw [if_neg h₂]
+    . subst h₂
+      repeat rw [if_neg h₁]
+    . repeat rw [if_neg h₁]
+      repeat rw [if_neg h₂]
 
-def associate (κ : Type*) [DecidableEq κ] [Hashable κ] [DecidableEq σ] [Zero σ] (c : CRDT ω σ γ)
-  : CRDT (κ × ω) (Associate κ σ) (AssociateInterp κ γ) := {
-    effect e s :=
-      s.alter e.fst (λ x ↦
-        some $ c.effect e.2 (x.getD 0)
-      )
-    interpret s := {
-      map k := c.interpret (s.getD k 0)
-      toList := s.map (λ _ ↦ c.interpret) |> Std.ExtHashMap.toListSorted
-    }
-    commutative e₁ e₂ := by {
-      funext s
-      apply Std.ExtHashMap.ext_getElem?
-      intro k
-      simp [Std.ExtHashMap.getElem?_alter]
-      by_cases h₁ : e₁.fst = k <;> by_cases h₂ : e₂.fst = k
-      . rw [if_pos h₁, if_pos h₂]
-        subst h₂
-        repeat rw [if_pos h₁]
-        repeat rw [if_pos h₁.symm]
-        simp only [Option.getD_some, Option.some.injEq]
-        rw [h₁]
-        exact congr_fun (c.commutative e₁.snd e₂.snd) _
-      . subst h₁
-        repeat rw [if_neg h₂]
-      . subst h₂
-        repeat rw [if_neg h₁]
-      . repeat rw [if_neg h₁]
-        repeat rw [if_neg h₂]
-    }
+def associate (κ : Type*) [DecidableEq κ] [Hashable κ] [DecidableEq σ] [Zero σ] (c : CRDT ω σ γ) :
+    CRDT (κ × ω) (Associate κ σ) (AssociateInterp κ γ) where
+  effect e s :=
+    s.alter e.fst (λ x ↦
+      some $ c.effect e.2 (x.getD 0)
+    )
+  interpret s := {
+    map k := c.interpret (s.getD k 0)
+    toList := s.map (λ _ ↦ c.interpret) |> Std.ExtHashMap.toListSorted
   }
+  commutative e₁ e₂ := by
+    funext s
+    apply Std.ExtHashMap.ext_getElem?
+    intro k
+    simp [Std.ExtHashMap.getElem?_alter]
+    by_cases h₁ : e₁.fst = k <;> by_cases h₂ : e₂.fst = k
+    . rw [if_pos h₁, if_pos h₂]
+      subst h₂
+      repeat rw [if_pos h₁]
+      repeat rw [if_pos h₁.symm]
+      simp only [Option.getD_some, Option.some.injEq]
+      rw [h₁]
+      exact congr_fun (c.commutative e₁.snd e₂.snd) _
+    . subst h₁
+      repeat rw [if_neg h₂]
+    . subst h₂
+      repeat rw [if_neg h₁]
+    . repeat rw [if_neg h₁]
+      repeat rw [if_neg h₂]

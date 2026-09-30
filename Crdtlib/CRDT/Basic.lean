@@ -16,10 +16,7 @@ structure CRDT (ω σ γ : Type*) where
 
 def CRDTₜ.of (τ : Type) [PartialOrder τ] (c : CRDTₜ τ ω σ γ) : CRDTₜ τ ω σ γ := c
 
-def CRDT.toCRDTₜ (τ : Type) [PartialOrder τ] (c : CRDT ω σ γ)
-  : CRDTₜ τ ω σ γ
-  := {
-    effect e := c.effect e.o
-    interpret := c.interpret
-    commutative e₁ e₂ _ := c.commutative e₁.o e₂.o
-  }
+def CRDT.toCRDTₜ (τ : Type) [PartialOrder τ] (c : CRDT ω σ γ) : CRDTₜ τ ω σ γ where
+  effect e := c.effect e.o
+  interpret := c.interpret
+  commutative e₁ e₂ _ := c.commutative e₁.o e₂.o
