@@ -14,8 +14,7 @@ directives in `Shared.Layout`; the documentation pages use `Docs.pageTemplate`.
 namespace Home
 
 def description : String :=
-  "A Lean 4 library of operation-based CRDTs built from five principal combinators. " ++
-  "Everything assembled from them converges by construction."
+  "A Lean 4 library of operation-based CRDTs and combinators"
 
 def headConfig (path : Path) : HeadConfig :=
   if Docs.isDocs path then Docs.headConfig
