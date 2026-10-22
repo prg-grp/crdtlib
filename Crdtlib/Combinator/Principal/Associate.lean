@@ -68,6 +68,7 @@ def associateₜ [PartialOrder τ] (κ : Type*) [DecidableEq κ] [Hashable κ] [
     . repeat rw [if_neg h₁]
       repeat rw [if_neg h₂]
 
+-- ANCHOR: associate
 def associate (κ : Type*) [DecidableEq κ] [Hashable κ] [DecidableEq σ] [Zero σ] (c : CRDT ω σ γ) :
     CRDT (κ × ω) (Associate κ σ) (AssociateInterp κ γ) where
   effect e s :=
@@ -78,6 +79,7 @@ def associate (κ : Type*) [DecidableEq κ] [Hashable κ] [DecidableEq σ] [Zero
     map k := c.interpret (s.getD k 0)
     toList := s.map (λ _ ↦ c.interpret) |> Std.ExtHashMap.toListSorted
   }
+-- ANCHOR_END: associate
   commutative e₁ e₂ := by
     funext s
     apply Std.ExtHashMap.ext_getElem?

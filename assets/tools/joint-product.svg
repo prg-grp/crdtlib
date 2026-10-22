@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
+  <!-- The tool drawn for the joint-product combinator. Colors come from the site's classes (t-main, t-light,
+       t-steel, …, in base.css), so the main parts take the color of the combinator's role. -->
+  <rect class="t-main" x="24" y="7" width="19" height="34"/>
+  <path class="t-light" d="M5 7h19v2.5l9-2v12l-9-2v6.5l9-2v12l-9-2V41H5z"/>
+</svg>

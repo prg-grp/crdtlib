@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
+  <!-- The tool drawn for the product combinator. Colors come from the site's classes (t-main, t-light,
+       t-steel, …, in base.css), so the main parts take the color of the combinator's role. -->
+  <rect class="t-light" x="12" y="18" width="30" height="9"/>
+  <rect class="t-main" x="12" y="27" width="30" height="9"/>
+  <path class="t-steel" d="M5 8h22v5H10v24h17v5H5z"/>
+  <rect class="t-steel-dark" x="23" y="13" width="3" height="5"/>
+  <rect class="t-steel" x="19" y="16" width="11" height="2.5"/>
+  <rect class="t-main" x="21" y="3" width="7" height="6"/>
+</svg>

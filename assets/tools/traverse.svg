@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
+  <!-- The tool drawn for the traverse combinator. Colors come from the site's classes (t-main, t-light,
+       t-steel, …, in base.css), so the main parts take the color of the combinator's role. -->
+  <rect class="t-light" x="4" y="34" width="11" height="8"/>
+  <rect class="t-light" x="18.5" y="34" width="11" height="8"/>
+  <rect class="t-light" x="33" y="34" width="11" height="8"/>
+  <path class="t-steel" d="M5 23 32 12l2.5 8.5L7.5 28z"/>
+  <path class="t-teeth" d="M7.5 28l1-2.6 1.6 1.8 1-2.6 1.6 1.8 1-2.6 1.6 1.8 1-2.6 1.6 1.8 1-2.6 1.6 1.8 1-2.6 1.6 1.8 1-2.6 1.6 1.8 1-2.6 1.6 1.8 1-2.6"/>
+  <path class="t-main" d="M30 9h10a4 4 0 0 1 4 4v8a4 4 0 0 1-4 4h-6z"/>
+  <rect class="t-paper" x="35" y="12.5" width="5.5" height="8"/>
+</svg>

@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
+  <!-- The tool drawn for the map-state combinator. Colors come from the site's classes (t-main, t-light,
+       t-steel, …, in base.css), so the main parts take the color of the combinator's role. -->
+  <path class="t-steel" d="M5 34h36l-2 4H7z"/>
+  <path class="t-steel-dark" d="M19 11h6l4.5 19h-6z"/>
+  <rect class="t-light" x="9" y="24" width="29" height="10"/>
+  <path class="t-main" d="M29 24c0-10 9-11 9-4v4z"/>
+  <circle class="t-main" cx="14" cy="21" r="4"/>
+  <path class="t-curl" d="M41 33c6-2 6-9 1.5-9.5-3-.3-3.8 3.6-.8 4"/>
+</svg>

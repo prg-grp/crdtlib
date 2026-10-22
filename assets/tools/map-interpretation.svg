@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
+  <!-- The tool drawn for the map-interpretation combinator. Colors come from the site's classes (t-main, t-light,
+       t-steel, …, in base.css), so the main parts take the color of the combinator's role. -->
+  <rect class="t-light" x="5" y="32" width="38" height="10"/>
+  <rect class="t-dark" x="5" y="32" width="20" height="10"/>
+  <path class="t-main" d="M35 3l6 4-8.5 12-5-3.5z"/>
+  <path class="t-steel" d="M27.5 15.5l5 3.5-3 4.5-5-3.5z"/>
+  <path class="t-dark" d="M24.5 20l5 3.5-4.5 6.5c-1.5 1-5.5-1.5-6.5-4z"/>
+</svg>

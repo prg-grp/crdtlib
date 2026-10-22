@@ -1,5 +1,6 @@
 import Crdtlib.CRDT.Primitive.ACFun
 
+-- ANCHOR: counter64
 def counter64 : CRDT Int64 Int64 Int64 := ac_fun Int64 (· + ·)
 
 @[export counter64_effect]
@@ -9,6 +10,7 @@ def counter64Effect (event : Int64) (state : Int64) : Int64 :=
 @[export counter64_interpret]
 def counter64Interpret (state : Int64) : Int64 :=
   counter64.interpret state
+-- ANCHOR_END: counter64
 
 
 def counter32' : CRDT Int32 Int32 Int32 := ac_fun Int32 (· + ·)

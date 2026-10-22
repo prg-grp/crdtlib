@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="crdtlib">
+  <!-- The crdtlib logo: a square holding three bars, in the colors of principal combinators,
+       derived combinators and primitive CRDTs. The sites embed this file (Shared/Brand.lean) and
+       use it as the favicon. -->
+  <g stroke="#151922" stroke-linejoin="miter">
+    <rect x="12.5" y="5" width="16" height="4.6" fill="#3341c2" stroke-width="1.2"/>
+    <rect x="12.5" y="10.6" width="16" height="4.6" fill="#0a7a6b" stroke-width="1.2"/>
+    <rect x="12.5" y="16.2" width="16" height="4.6" fill="#b04d17" stroke-width="1.2"/>
+    <path d="M3 3h7v19h19v7H3z" fill="#c9ced8" stroke-width="1.4"/>
+    <path d="M7 7h3M8 11h2M7 15h3M8 19h2M14 26v-4M18 25v-3M22 26v-4M26 25v-3" fill="none" stroke-width="1.1"/>
+  </g>
+</svg>

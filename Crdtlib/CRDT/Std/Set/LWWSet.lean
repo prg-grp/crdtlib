@@ -5,6 +5,7 @@ import Crdtlib.Combinator.Derived.DisjointProduct
 import Crdtlib.CRDT.Std.Set.GSet
 import Mathlib.Data.Finset.Basic
 
+-- ANCHOR: lww_element_set
 def lww_element_set (σ : Type) [PartialOrder τ] [DecidableLT τ] [DecidableEq τ] [Hashable τ]
     [DecidableEq σ] [Hashable σ] [LinearOrder (Event τ σ)] :
     CRDT (SetOp (Event τ σ)) (GSet (Event τ σ) × GSet (Event τ σ)) (SetInterp σ) :=
@@ -14,3 +15,4 @@ def lww_element_set (σ : Type) [PartialOrder τ] [DecidableLT τ] [DecidableEq 
       { mem s := live.any (λ a ↦ a.o == s), toList := (live.map (·.o)).dedup })
     (map_op (λ | .add elem => .inl elem | .remove elem => .inr elem)
       (disjoint_product (gset (Event τ σ)) (gset (Event τ σ))))
+-- ANCHOR_END: lww_element_set

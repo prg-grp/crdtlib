@@ -1,0 +1,301 @@
+/* The landing page and its 404 page. The carousel is styled in showcase.css. */
+
+/* ---------- Hero ---------- */
+
+.hero {
+  background:
+    radial-gradient(ellipse 50% 40% at 85% 0%, color-mix(in srgb, var(--principal) 11%, transparent), transparent 70%),
+    radial-gradient(ellipse 40% 35% at 10% 35%, color-mix(in srgb, var(--derived) 8%, transparent), transparent 70%),
+    var(--bg);
+}
+
+.hero {
+  position: relative;
+  padding: 52px 0 28px;
+  overflow: hidden;
+  text-align: center;
+}
+
+/* A faint dot grid behind the headline. */
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(var(--line-strong) 1px, transparent 1px);
+  background-size: 20px 20px;
+  opacity: 0.5;
+  -webkit-mask-image: linear-gradient(to bottom, #000, transparent 85%);
+  mask-image: linear-gradient(to bottom, #000, transparent 85%);
+  pointer-events: none;
+}
+
+.hero-inner {
+  position: relative;
+  max-width: 860px;
+}
+
+.hero h1 {
+  margin: 0 0 14px;
+  font-family: var(--font-display);
+  font-size: clamp(36px, 4.8vw, 56px);
+  font-weight: 700;
+  line-height: 1.06;
+  letter-spacing: -0.025em;
+}
+
+.hero-accent {
+  background: linear-gradient(95deg, var(--principal) 10%, var(--derived) 90%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.hero-lede {
+  max-width: 62ch;
+  margin: 0 auto 20px;
+  color: var(--ink-2);
+  font-size: 17.5px;
+  line-height: 1.6;
+}
+
+.hero .actions { justify-content: center; }
+
+@media (max-width: 640px) {
+  .hero { padding: 36px 0 20px; }
+  .hero h1 .hero-accent { display: block; }
+}
+
+/* ---------- Bands ---------- */
+
+.band {
+  padding: 56px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.free > .band:nth-of-type(odd) { background: var(--bg-sunken); }
+
+.band-head {
+  max-width: 760px;
+  margin-bottom: 24px;
+}
+
+.band-head h2 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(25px, 3vw, 34px);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+.band-body > * + * { margin-top: 16px; }
+
+/* A subheading within a band, above a group of cards; the first one sits right under the title. */
+.band-subhead {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.band-body > * + .band-subhead { margin-top: 32px; }
+.band-body > .band-subhead + * { margin-top: 10px; }
+
+.band-body p,
+.band-body li {
+  color: var(--ink-2);
+  font-size: 16px;
+  line-height: 1.65;
+}
+
+.split-col > ul {
+  padding-left: 1.2em;
+  list-style: disc;
+}
+
+.split-col > ul > li { margin: 6px 0; }
+.split-col > ul > li::marker { color: var(--accent); }
+.band-body li > p { margin: 0; }
+
+.split {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+  gap: 32px;
+}
+
+/* Text on the left, a wider column of code on the right. */
+.split.code-right { grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 28px; }
+.split.code-left { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 28px; }
+
+.band-body code.hl.lean.block,
+.band-body pre { font-size: 13px; }
+
+/* Steps laid out in a row under a full-width code block. */
+.steps.row ol { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+
+.split-col { min-width: 0; }
+.split-col > * + * { margin-top: 12px; }
+
+@media (max-width: 900px) {
+  .band { padding: 40px 0; }
+  .split,
+  .split.code-right,
+  .split.code-left { grid-template-columns: minmax(0, 1fr); gap: 28px; }
+}
+
+#next .band-head { margin-bottom: 16px; }
+
+/* ---------- Steps and features ---------- */
+
+.steps ol {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: step;
+}
+
+.steps li {
+  position: relative;
+  padding: 14px 16px 14px 58px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--bg-raised);
+  counter-increment: step;
+}
+
+.steps li::before {
+  content: counter(step);
+  position: absolute;
+  top: 13px;
+  left: 16px;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-sm);
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.band-body .steps li p { font-size: 15.5px; line-height: 1.6; }
+
+.features ul {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.features li {
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--bg-raised);
+}
+
+.band-body .features li p { font-size: 15.5px; line-height: 1.65; }
+
+.features li strong {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 600;
+}
+
+@media (max-width: 860px) {
+  .features ul { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* ---------- 404 ---------- */
+
+.not-found {
+  padding: 80px 24px 96px;
+  text-align: center;
+}
+
+.not-found h1 {
+  max-width: 18ch;
+  margin: 0 auto 16px;
+  font-family: var(--font-display);
+  font-size: clamp(32px, 4.6vw, 54px);
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+}
+
+.not-found p:not(.kicker) {
+  margin: 0 0 32px;
+  color: var(--ink-2);
+  font-size: 18px;
+}
+
+.not-found .actions { justify-content: center; }
+
+/* ---------- BibTeX entries ---------- */
+
+.bibtex summary {
+  width: max-content;
+  color: var(--ink-2);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.bibtex summary:hover { color: var(--ink); }
+.bibtex pre { margin-top: 12px; font-size: 12.5px; white-space: pre-wrap; }
+
+
+/* ---------- Publications ---------- */
+
+.pub-list {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pub {
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--bg-raised);
+}
+
+.band-body .pub p { margin: 0; }
+.band-body .pub > * + * { margin-top: 6px; }
+
+.band-body .pub .pub-venue {
+  color: var(--accent);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.pub-title {
+  margin: 0;
+  font-size: 19px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.pub-title a { color: var(--ink); }
+.pub-title a:hover { color: var(--accent); }
+
+.band-body .pub .pub-authors { font-size: 15px; }
+.band-body .pub .actions { margin-top: 12px; }
+.pub .bibtex { margin-top: 12px; }
+
+/* A page with a single section, like Publications: the section fills the window down to the footer. */
+#content:has(> main.free > .band:only-child) { display: flex; flex-direction: column; }
+main.free:has(> .band:only-child) { display: flex; flex: 1; flex-direction: column; }
+.free > .band:only-child { flex: 1; border-bottom: 0; }

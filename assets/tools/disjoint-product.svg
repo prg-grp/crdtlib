@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
+  <!-- The tool drawn for the disjoint-product combinator. Colors come from the site's classes (t-main, t-light,
+       t-steel, …, in base.css), so the main parts take the color of the combinator's role. -->
+  <rect class="t-light" x="6" y="6" width="16" height="36"/>
+  <rect class="t-main" x="26" y="6" width="16" height="36"/>
+</svg>

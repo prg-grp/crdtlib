@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
+  <!-- The tool drawn for the tagged-union combinator. Colors come from the site's classes (t-main, t-light,
+       t-steel, …, in base.css), so the main parts take the color of the combinator's role. -->
+  <rect class="t-light" x="21" y="15" width="7" height="30"/>
+  <path class="t-steel" d="M11 7h19c6 0 11 3.5 13 10-3.5-3-8-4-12-2.5L28 17H11z"/>
+  <rect class="t-steel-dark" x="5" y="5.5" width="7" height="13"/>
+</svg>

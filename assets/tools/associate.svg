@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
+  <!-- The tool drawn for the associate combinator. Colors come from the site's classes (t-main, t-light,
+       t-steel, …, in base.css), so the main parts take the color of the combinator's role. -->
+  <rect class="t-main" x="8" y="5" width="32" height="36"/>
+  <rect class="t-main" x="10" y="41" width="4" height="3"/>
+  <rect class="t-main" x="34" y="41" width="4" height="3"/>
+  <rect class="t-light" x="11" y="8" width="12" height="9"/>
+  <rect class="t-light" x="25" y="8" width="12" height="9"/>
+  <rect class="t-light" x="11" y="19" width="12" height="9"/>
+  <rect class="t-light" x="25" y="19" width="12" height="9"/>
+  <rect class="t-light" x="11" y="30" width="12" height="9"/>
+  <rect class="t-light" x="25" y="30" width="12" height="9"/>
+  <rect class="t-paper" x="14" y="10" width="6" height="3"/>
+  <rect class="t-paper" x="28" y="10" width="6" height="3"/>
+  <rect class="t-paper" x="14" y="21" width="6" height="3"/>
+  <rect class="t-paper" x="28" y="21" width="6" height="3"/>
+  <rect class="t-paper" x="14" y="32" width="6" height="3"/>
+  <rect class="t-paper" x="28" y="32" width="6" height="3"/>
+  <circle class="t-steel-dark" cx="17" cy="15.2" r="1"/>
+  <circle class="t-steel-dark" cx="31" cy="15.2" r="1"/>
+  <circle class="t-steel-dark" cx="17" cy="26.2" r="1"/>
+  <circle class="t-steel-dark" cx="31" cy="26.2" r="1"/>
+  <circle class="t-steel-dark" cx="17" cy="37.2" r="1"/>
+  <circle class="t-steel-dark" cx="31" cy="37.2" r="1"/>
+</svg>

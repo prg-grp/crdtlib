@@ -18,6 +18,7 @@ instance : LinearOrder Choice :=
 instance tagged_union_zero_choice : Zero Choice where
   zero := Choice.left
 
+-- ANCHOR: tagged_union
 def tagged_union_interp : (γ₁ × γ₂) × Choice → γ₁ ⊕ γ₂
   | ⟨⟨s₁, _⟩, Choice.left⟩ => Sum.inl s₁
   | ⟨⟨_, s₂⟩, Choice.right⟩ => Sum.inr s₂
@@ -25,6 +26,7 @@ def tagged_union_interp : (γ₁ × γ₂) × Choice → γ₁ ⊕ γ₂
 def tagged_unionₜ [PartialOrder τ] [DecidableLT τ] [DecidableEq τ] (c₁ : CRDTₜ τ ω₁ σ₁ γ₁) (c₂ : CRDTₜ τ ω₂ σ₂ γ₂) :
     CRDTₜ τ ((ω₁ ⊕ ω₂) ⊕ Choice) ((σ₁ × σ₂) × (Finset (Event τ Choice))) (γ₁ ⊕ γ₂) :=
   map_interpretationₜ tagged_union_interp (disjoint_productₜ (disjoint_productₜ c₁ c₂) (mv_lwwₜ Choice))
+-- ANCHOR_END: tagged_union
 
 def auto_tagged_unionₜ [PartialOrder τ] [DecidableLT τ] [DecidableEq τ] (c₁ : CRDTₜ τ ω₁ σ₁ γ₁) (c₂ : CRDTₜ τ ω₂ σ₂ γ₂) :
     CRDTₜ τ (ω₁ ⊕ ω₂) ((σ₁ × σ₂) × (Finset (Event τ Choice))) (γ₁ ⊕ γ₂) :=

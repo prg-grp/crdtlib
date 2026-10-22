@@ -3,6 +3,7 @@ import Mathlib.Data.Set.Finite.Basic
 
 section MVReg
 
+-- ANCHOR: mv_reg
 def mv_regₜ (σ : Type) [PartialOrder τ] [DecidableLT τ] [DecidableEq τ] [LinearOrder σ] :
     CRDTₜ τ σ (Finset (Event τ σ)) (Finset (Event τ σ)) where
   effect e s :=
@@ -11,6 +12,7 @@ def mv_regₜ (σ : Type) [PartialOrder τ] [DecidableLT τ] [DecidableEq τ] [L
     -- insert e (Std.HashSet.filter (λ x ↦ ¬ x.t < e.t) s)
     insert e (s.filter λ x ↦ ¬ x.t < e.t)
   interpret := id
+-- ANCHOR_END: mv_reg
   commutative e₁ e₂ con := by
     ext s a
     have neq : e₁ ≠ e₂ := by

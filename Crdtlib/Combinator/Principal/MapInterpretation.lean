@@ -13,6 +13,7 @@ def map_interpretationₜ [PartialOrder τ] (f : γ₁ → γ₂) (c : CRDTₜ �
     simp
     exact congrFun (c.commutative e₁ e₂ con) s
 
+-- ANCHOR: map_interpretation
 def map_interpretation (f : γ₁ → γ₂) (c : CRDT ω σ γ₁) : CRDT ω σ γ₂ where
   effect := c.effect
   interpret := f ∘ c.interpret
@@ -20,3 +21,4 @@ def map_interpretation (f : γ₁ → γ₂) (c : CRDT ω σ γ₁) : CRDT ω σ
     ext s
     simp
     exact congrFun (c.commutative e₁ e₂) s
+-- ANCHOR_END: map_interpretation

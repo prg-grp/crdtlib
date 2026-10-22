@@ -95,12 +95,14 @@ private lemma foldr_comm (φ : ω₁ → σ → σ) (comm : ∀ e₁ e₂ : ω�
     rw [ih, ← foldr_comm_single φ comm]
 
 -- same as traverse_list
+-- ANCHOR: traverse
 def traverse (f : ω₂ → List ω₁) (c : CRDT ω₁ σ γ) : CRDT ω₂ σ γ where
     effect e := (f e).foldr c.effect
     interpret := c.interpret
     commutative e₁ e₂ := by
       ext _
       exact foldr_comm c.effect c.commutative _ _ _
+-- ANCHOR_END: traverse
 
 private lemma foldr_comm_single_timed
     [PartialOrder τ]

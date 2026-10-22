@@ -1,0 +1,68 @@
+# Builds the website and deploys it to GitHub Pages.
+#
+# The site is generated for the path GitHub Pages serves it under (for a project site,
+# https://<owner>.github.io/<repository>/), which `actions/configure-pages` reports as `base_path`.
+# To deploy somewhere else, set SITE_BASE_PATH below to that path instead, e.g. `/` for the root of
+# a custom domain.
+
+name: Website
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - id: pages
+        uses: actions/configure-pages@v5
+
+      - name: Install elan
+        run: |
+          curl -sSfL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh \
+            | sh -s -- -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+
+      - uses: actions/cache@v4
+        with:
+          path: .lake
+          key: lake-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json') }}
+          restore-keys: lake-${{ runner.os }}-
+
+      - name: Fetch Mathlib's build cache
+        run: lake exe cache get
+
+      - name: Build the library
+        run: lake build
+
+      - name: Generate the website
+        run: lake run generate
+        env:
+          SITE_BASE_PATH: ${{ steps.pages.outputs.base_path }}
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

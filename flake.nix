@@ -54,7 +54,7 @@
             default = pkgs.mkShell {
               inputsFrom = [ bindings-rust ];
               packages = with pkgs; [
-                lean4
+                elan
                 pkg-config
                 gmp
                 libuv

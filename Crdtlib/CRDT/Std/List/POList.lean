@@ -37,12 +37,15 @@ private def po_traversal {σ : Type*}
       (visited', if live.mem v ∧ v ≠ ⊥ then v :: out' else out')
   (go bound [⊥] [] ⊥).snd
 
+-- ANCHOR: list_op
 inductive ListOp (σ : Type*) where
   | insert (prev : σ) (elem : σ) (next : σ)
   | remove (elem : σ)
+-- ANCHOR_END: list_op
 
 variable (σ : Type*) [Hashable σ] [DecidableEq σ] [Zero σ]
 
+-- ANCHOR: pol_ops
 structure POL.Insert where
   prev : σ
   elem : σ
@@ -50,18 +53,22 @@ structure POL.Insert where
 
 structure POL.Remove where
   elem : σ
+-- ANCHOR_END: pol_ops
 
+-- ANCHOR: po_edges
 def edges : CRDT (σ × σ) (Associate σ (GSet σ)) (AssociateInterp σ (SetInterp σ)) :=
   associate σ (gset σ)
 
 def po_edges : CRDT (σ × σ × σ) (Associate σ (GSet σ)) (AssociateInterp σ (SetInterp σ)) :=
   traverse (λ ⟨prev, elem, next⟩ ↦ [⟨prev, elem⟩, ⟨elem, next⟩]) (edges σ)
+-- ANCHOR_END: po_edges
 
 abbrev POListState := (Associate σ ℤ) × (Associate σ (GSet σ))
 
 instance : DecidableEq (POListState σ) := inferInstance
 
-def polist [LinearOrder σ] [Bot σ] [Zero σ] [Hashable σ] : CRDT (ListOp σ) (POListState σ) (List σ) :=
+-- ANCHOR: polist
+def polist [LinearOrder σ] [Bot σ] : CRDT (ListOp σ) (POListState σ) (List σ) :=
   map_interpretation po_traversal
     $ traverse (λ
         | .insert prev elem next => [.inl $ .add elem, .inr ⟨prev, elem, next⟩]
@@ -70,8 +77,9 @@ def polist [LinearOrder σ] [Bot σ] [Zero σ] [Hashable σ] : CRDT (ListOp σ) 
         -- add-nodes, edges
         (pnset σ)
         (po_edges σ))
+-- ANCHOR_END: polist
 
-def polistₜ {τ : Type} [PartialOrder τ] [LinearOrder σ] [Bot σ] [Zero σ] [Hashable σ] :
+def polistₜ {τ : Type} [PartialOrder τ] [LinearOrder σ] [Bot σ] :
     CRDTₜ τ (ListOp σ) (POListState σ) (List σ) :=
   (polist σ).toCRDTₜ τ
 
@@ -96,12 +104,14 @@ private def POL.po_traversal {σ : Type*}
   (go bound [⊥] [] ⊥).snd
 
 -- We use the PNSet (the other) version for automerge because it is more efficient
-def POL.polist [LinearOrder σ] [Bot σ] [Hashable σ] :
+-- ANCHOR: pol_polist
+def POL.polist [LinearOrder σ] [Bot σ] :
     CRDT (Insert σ ⊕ Remove σ) ((GSet σ × Associate σ (GSet σ)) × (GSet σ)) (List σ) :=
   map_interpretation po_traversal
     (disjoint_product
       (map_op (λ ⟨p, v, n⟩ ↦ ⟨v, ⟨p, v, n⟩⟩) (joint_product (gset σ) (po_edges σ)))
       (map_op (λ ⟨o⟩ ↦ o) (gset σ)))
+-- ANCHOR_END: pol_polist
 
 end POList
 
@@ -116,6 +126,7 @@ inductive ValueListOp (χ ω : Type*) where
 
 variable (χ : Type u) [DecidableEq χ]
 
+-- ANCHOR: polist_with_values
 def polist_with_values [LinearOrder χ] [Bot χ] [Zero χ] [Hashable χ] [Zero σ] [DecidableEq σ] (c : CRDT ω σ γ) :
     CRDT (ValueListOp χ ω) (Associate χ σ × POListState χ) (List (χ × γ)) := id
   <| map_interpretation (λ ⟨g, l⟩ ↦ l.map (λ x ↦ ⟨x, g.map x⟩))
@@ -124,6 +135,7 @@ def polist_with_values [LinearOrder χ] [Bot χ] [Zero χ] [Hashable χ] [Zero �
     | .insert prev pos next => .inr $ .insert prev pos next
     | .remove pos => .inr $ .remove pos)
   <| disjoint_product (associate χ c) (polist χ)
+-- ANCHOR_END: polist_with_values
 
 def polist_with_valuesₜ [PartialOrder τ] [LinearOrder χ] [Bot χ] [Zero χ] [Hashable χ] [Zero σ] [DecidableEq σ] (c : CRDTₜ τ ω σ γ) :
     CRDTₜ τ (ValueListOp χ ω) (Associate χ σ × POListState χ) (List (χ × γ)) := id

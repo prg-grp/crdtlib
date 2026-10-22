@@ -1,0 +1,528 @@
+/* The carousel of constructions on the landing page, and its diagrams. */
+
+.showcase {
+  position: relative;
+  padding: 4px 0 56px;
+  border-bottom: 1px solid var(--line);
+}
+
+/* ---------- Introduction ---------- */
+
+/* A small heading on the left and a line of introduction on the right, above the tabs. */
+.sc-intro {
+  display: grid;
+  grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+  align-items: center;
+  gap: 8px 28px;
+  margin: 32px 0 28px;
+  padding-top: 36px;
+  border-top: 1px solid var(--line);
+}
+
+/* Centered in its column, both ways. */
+.sc-intro-title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  text-align: center;
+}
+
+.sc-intro-text p {
+  margin: 0;
+  color: var(--ink-2);
+  font-size: 15.5px;
+  line-height: 1.6;
+}
+
+.sc-intro-text p + p { margin-top: 8px; }
+
+@media (max-width: 760px) {
+  .sc-intro { grid-template-columns: minmax(0, 1fr); margin: 16px 0 20px; padding-top: 24px; }
+  .sc-intro-title { text-align: left; }
+}
+
+/* ---------- Tabs and controls ---------- */
+
+.sc-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+/* The tabs: a segmented control; the active one is solid. */
+.sc-tabs {
+  display: flex;
+  flex: 1;
+  gap: 2px;
+  min-width: 0;
+  padding: 2px;
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--bg-raised);
+  scrollbar-width: none;
+}
+
+.sc-tabs::-webkit-scrollbar { display: none; }
+
+.sc-tab {
+  position: relative;
+  flex: 1 0 auto;
+  padding: 6px 12px 7px;
+  overflow: hidden;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: none;
+  color: var(--ink-2);
+  font: 600 14px/1.2 var(--font-sans);
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color 0.15s, color 0.15s;
+}
+
+.sc-tab:hover { color: var(--ink); background: var(--bg-sunken); }
+
+.sc-tab.active {
+  background: var(--ink);
+  color: var(--bg);
+}
+
+/* How far the slide has played: a thin line under the label. */
+.sc-tab-progress {
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  bottom: 2px;
+  height: 2px;
+  background: color-mix(in srgb, var(--bg) 25%, transparent);
+  opacity: 0;
+}
+
+.sc-tab-progress::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--bg);
+  transform-origin: left;
+  transform: scaleX(var(--progress, 0));
+}
+
+.sc-tab.active .sc-tab-progress { opacity: 1; }
+
+.sc-controls .icon-button { border-color: var(--line); background: var(--bg-raised); }
+.sc-controls .icon-button:hover { border-color: var(--line-strong); background: var(--bg-sunken); }
+
+.sc-controls {
+  display: flex;
+  flex: none;
+  gap: 2px;
+}
+
+.when-paused { display: none; }
+.showcase.paused .when-paused { display: block; }
+.showcase.paused .when-playing { display: none; }
+
+/* Without JavaScript, the slides are shown one after another, in their final state. */
+.showcase:not(.enhanced) .sc-head { display: none; }
+.showcase:not(.enhanced) .sc-stage { gap: 24px; }
+
+/* ---------- Slides ---------- */
+
+.sc-stage {
+  display: grid;
+}
+
+.sc-slide {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  align-items: stretch;
+  gap: 20px;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--bg-raised);
+  box-shadow: var(--shadow-lg);
+}
+
+/* All slides share one grid cell, so the stage is as tall as the tallest and never jumps. */
+.enhanced .sc-slide {
+  grid-area: 1 / 1;
+  transition: opacity 0.35s ease, transform 0.35s ease, visibility 0s;
+}
+
+.enhanced .sc-slide:not(.active) {
+  visibility: hidden;
+  opacity: 0;
+  transform: translateX(18px);
+  transition: opacity 0.2s ease, transform 0.2s ease, visibility 0s 0.2s;
+}
+
+.sc-copy { align-self: center; }
+.sc-copy > * { margin: 0; }
+.sc-copy > * + * { margin-top: 10px; }
+
+.sc-title {
+  font-family: var(--font-display);
+  font-size: clamp(21px, 2.2vw, 25px);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+
+.sc-copy .kicker + .sc-title { margin-top: 6px; }
+
+.sc-blurb {
+  color: var(--ink-2);
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.sc-expr {
+  display: block;
+  padding: 6px 10px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--bg-sunken);
+  color: var(--ink-2);
+  font-size: 12.5px;
+  line-height: 1.55;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+/* The operations, in the order they are played. */
+.sc-ops {
+  display: grid;
+  gap: 6px;
+  padding: 0;
+  list-style: none;
+  counter-reset: op;
+}
+
+.sc-ops li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 8px;
+  padding: 4px 8px 4px 30px;
+  position: relative;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  color: var(--ink-3);
+  font-size: 13px;
+  counter-increment: op;
+  opacity: 0.5;
+  transition: opacity 0.25s, background-color 0.25s, border-color 0.25s;
+}
+
+.sc-ops li::before {
+  content: counter(op);
+  position: absolute;
+  left: 6px;
+  top: 5px;
+  display: grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  border-radius: var(--radius-sm);
+  background: var(--line);
+  color: var(--ink-2);
+  font: 700 11px/1 var(--font-sans);
+  transition: background-color 0.25s, color 0.25s;
+}
+
+.sc-ops li.running {
+  opacity: 1;
+  border-color: color-mix(in srgb, var(--op) 40%, transparent);
+  background: color-mix(in srgb, var(--op) 8%, transparent);
+}
+
+.sc-ops li.running::before { background: var(--op); color: var(--op-ink); }
+
+.sc-ops li.done { opacity: 1; }
+.sc-ops li.done::before { content: "✓"; background: color-mix(in srgb, var(--ok) 16%, transparent); color: var(--ok); }
+
+.sc-op { color: var(--ink); font-size: 13px; }
+.sc-op-view { color: var(--ink-2); font-size: 12.5px; }
+
+/* The view appears once the operation has been read back. */
+.enhanced .sc-ops li:not(.done) .sc-arrow,
+.enhanced .sc-ops li:not(.done) .sc-op-view { visibility: hidden; }
+
+.sc-uses {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 0;
+  list-style: none;
+}
+
+/* A combinator the construction uses, with its tool. */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 7px 2px 2px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+  font: 500 12px/1.4 var(--font-mono);
+}
+
+.chip.role-principal { border-color: var(--principal-line); background: var(--principal-bg); color: var(--principal); }
+.chip.role-derived { border-style: dashed; border-color: var(--derived-line); background: var(--derived-bg); color: var(--derived); }
+
+.sc-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 16px;
+  padding-top: 4px;
+  font-size: 14px;
+}
+
+.sc-meta a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+}
+
+.sc-figure {
+  display: grid;
+  place-items: center;
+  margin: 0;
+  padding: 12px 8px;
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background:
+    radial-gradient(var(--line-strong) 1px, transparent 1px) 0 0 / 16px 16px,
+    var(--bg-sunken);
+}
+
+.sc-legend { justify-content: center; margin-top: 12px; }
+
+.token-swatch {
+  display: inline-grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--op);
+  color: var(--op-ink);
+  font: 700 11px/1 var(--font-mono);
+}
+
+.token-swatch.interp { background: var(--ok); color: var(--bg-raised); }
+
+@media (max-width: 960px) {
+  .sc-slide { grid-template-columns: minmax(0, 1fr); gap: 14px; padding: 12px; }
+  .sc-figure { order: -1; }
+}
+
+@media (max-width: 640px) {
+  .showcase { padding-bottom: 40px; }
+  .sc-head { flex-wrap: wrap; }
+  .sc-tabs { flex-basis: 100%; }
+  .sc-controls { margin-left: auto; }
+  .sc-slide { padding: 10px; }
+  .sc-figure { margin: -2px -2px 0; padding: 12px 6px; }
+}
+
+/* ---------- Diagrams ---------- */
+
+/* Small diagrams grow a little to fill the panel; large ones shrink to fit it. */
+.dg {
+  display: block;
+  width: min(100%, var(--w) * 1.25);
+  height: auto;
+  margin: 0 auto;
+  overflow: visible;
+}
+
+/* Wide diagrams scroll inside their frame on phones, rather than shrinking out of legibility. */
+@media (max-width: 640px) {
+  .dg { max-width: var(--w); width: max(100%, var(--w) * 0.78); }
+}
+
+.dg text { font-family: var(--font-mono); }
+
+.dg-code {
+  fill: var(--ink);
+  font-size: 13px;
+  font-weight: 500;
+  text-anchor: middle;
+}
+
+.dg-note {
+  fill: var(--ink-3);
+  font-family: var(--font-sans) !important;
+  font-size: 11px;
+  text-anchor: middle;
+}
+
+.dg-box,
+.dg-ghost {
+  fill: var(--bg-raised);
+  stroke: var(--line-strong);
+  stroke-width: 1.5;
+}
+
+.role-principal .dg-box { stroke: var(--principal); fill: color-mix(in srgb, var(--principal) 7%, var(--bg-raised)); }
+.role-principal .dg-code { fill: var(--principal); }
+
+.role-derived .dg-box { stroke: var(--derived); stroke-dasharray: 5 4; fill: color-mix(in srgb, var(--derived) 7%, var(--bg-raised)); }
+.role-derived .dg-code { fill: var(--derived); }
+
+.role-primitive .dg-box,
+.role-primitive .dg-ghost { stroke: var(--primitive); }
+.role-primitive .dg-box { fill: color-mix(in srgb, var(--primitive) 8%, var(--bg-raised)); }
+.role-primitive .dg-code { fill: var(--primitive); }
+
+.role-param .dg-box,
+.role-param .dg-ghost { stroke: var(--ink-3); stroke-dasharray: 2 3; }
+.role-param .dg-code { fill: var(--ink-2); }
+
+.dg-ghost { opacity: 0.55; }
+
+.dg-state-bg {
+  fill: var(--bg-raised);
+  stroke: var(--line-strong);
+  stroke-width: 1;
+}
+
+.dg-state-text {
+  fill: var(--ink);
+  font-size: 11.5px;
+  text-anchor: middle;
+}
+
+.dg-edge {
+  fill: none;
+  stroke: var(--line-strong);
+  stroke-width: 1.75;
+  transition: stroke 0.15s;
+}
+
+/* Combinator boxes link to their reference. Bubbles never get in the way of a click. */
+.dg-link { cursor: pointer; }
+.dg-link:hover .dg-box { stroke-width: 2.5; }
+.dg-link:hover .dg-code { text-decoration: underline; }
+.dg-link:focus-visible { outline: none; }
+.dg-link:focus-visible .dg-box { stroke: var(--accent); stroke-width: 3; }
+.dg-tokens { pointer-events: none; }
+
+.dg-edge.lit { stroke: var(--op); }
+
+/* The application, at the top of the drawing. */
+.dg-app-box { fill: var(--ink); }
+.dg-app-label { fill: color-mix(in srgb, var(--bg) 65%, var(--ink)); font-size: 12px; }
+.dg-view { fill: var(--bg); font-size: 13px; font-weight: 600; }
+
+/*
+ * Operations, on the way down: indigo, marked ω. The interpretation of the whole state, on the way
+ * up: green, marked γ. The dot is a translucent overlay that suits both.
+ */
+.dg-token-bg { fill: var(--op); stroke: var(--bg-raised); stroke-width: 1.5; }
+.dg-token-dot { fill: var(--token-dot); }
+.dg-token-glyph { fill: var(--op-ink); font-size: 12px; font-weight: 700; text-anchor: middle; }
+.dg-token-text { fill: var(--op-ink); font-size: 11.5px; font-weight: 500; }
+
+/* A linked bubble: operations sent along one edge together, like the list a `traverse` emits. */
+.dg-token-frame { fill: var(--bg-raised); stroke: var(--op); stroke-width: 1.5; }
+.dg-token-link { fill: var(--op); }
+
+.dg-token.interp .dg-token-bg { fill: var(--ok); }
+.dg-token.interp .dg-token-frame { stroke: var(--ok); }
+.dg-token.interp .dg-token-link { fill: var(--ok); }
+.dg-token.interp .dg-token-glyph,
+.dg-token.interp .dg-token-text { fill: var(--bg-raised); font-weight: 600; }
+
+/* While the state is interpreted, every leaf's state is read. */
+.dg-state-bg { transition: stroke 0.25s, fill 0.25s; }
+.dg.reading .dg-state-bg {
+  stroke: var(--ok);
+  fill: var(--read);
+}
+.dg-token { transition: opacity 0.2s; }
+
+/* Popping in, from the dot outwards. */
+.dg-token-body { transform-box: fill-box; transform-origin: 10px 50%; }
+.dg-token.appear .dg-token-body { animation: dg-token-pop 0.3s cubic-bezier(0.2, 0.9, 0.3, 1.35) both; }
+
+@keyframes dg-token-pop {
+  from { opacity: 0; transform: scale(0.35); }
+}
+.dg-token.gone { opacity: 0; }
+
+/* Assembling: each node appears after the parts it is built from. */
+.dg-body,
+.dg-app-body {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.sc-slide.building .dg-body,
+.sc-slide.building .dg-app-body {
+  animation: dg-pop 0.34s cubic-bezier(0.2, 0.9, 0.3, 1.25) both;
+  animation-delay: calc(var(--h) * 110ms);
+}
+
+.sc-slide.building .dg-edge {
+  stroke-dasharray: 600;
+  animation: dg-draw 0.3s ease-out both;
+  animation-delay: calc(var(--h) * 110ms);
+}
+
+/* Reacting to operations. */
+.dg-node.pulse .dg-box { animation: dg-pulse 0.45s ease-out; }
+.dg-node.changed .dg-state-bg { animation: dg-flash 0.7s ease-out; }
+.dg-app.pulse .dg-app-box { animation: dg-read 0.6s ease-out; }
+
+@keyframes dg-pop {
+  from { opacity: 0; transform: translateY(8px) scale(0.86); }
+}
+
+@keyframes dg-draw {
+  from { stroke-dashoffset: 600; }
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes dg-pulse {
+  0% { stroke-width: 4; }
+  100% { stroke-width: 1.5; }
+}
+
+/*
+ * Plain colors for the state chips: Chrome does not resolve `color-mix()` of variables inside
+ * keyframes (it paints black), nor interpolate it in transitions (it flashes other colors).
+ */
+.dg { --flash: #cfe8da; --read: #e9f4ee; --token-dot: rgba(255, 255, 255, 0.24); }
+:root.dark-theme .dg { --flash: #1d3a2b; --read: #142319; --token-dot: rgba(0, 0, 0, 0.18); }
+@media (prefers-color-scheme: dark) {
+  :root:not(.light-theme):not(.dark-theme) .dg { --flash: #1d3a2b; --read: #142319; --token-dot: rgba(0, 0, 0, 0.18); }
+}
+
+@keyframes dg-flash {
+  0% { fill: var(--flash); stroke: var(--ok); stroke-width: 2; }
+}
+
+@keyframes dg-read {
+  0% { fill: var(--ok); }
+}
+
+/* Hovered, paused, or off screen: everything stops where it is. */
+.showcase.frozen .sc-slide *,
+.showcase.frozen .sc-tab-progress::after { animation-play-state: paused !important; }
+
+@media (prefers-reduced-motion: reduce) {
+  .enhanced .sc-slide,
+  .enhanced .sc-slide:not(.active) { transition: none; transform: none; }
+  .sc-slide.building .dg-body,
+  .sc-slide.building .dg-app-body,
+  .sc-slide.building .dg-edge { animation: none; }
+}

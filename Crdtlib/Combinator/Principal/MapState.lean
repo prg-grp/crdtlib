@@ -21,10 +21,12 @@ def map_stateₜ [PartialOrder τ] (f : σ₁ → σ₂) (f' : σ₂ → σ₁) 
     unfold Pkg.map at *
     simp [h, b]
 
+-- ANCHOR: map_state
 def map_state {σ₁ σ₂ ω γ} (f : σ₁ → σ₂) (f' : σ₂ → σ₁) (i : f' ∘ f = id := by funext; simp) (c : CRDT ω σ₁ γ) :
     CRDT ω σ₂ γ where
   effect e := f ∘ (c.effect e) ∘ f'
   interpret := c.interpret ∘ f'
+-- ANCHOR_END: map_state
   commutative e₁ e₂ := by
     ext s
     have h : ∀ x, f' (f x) = x := by

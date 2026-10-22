@@ -4,6 +4,7 @@ import Mathlib.Data.Finset.Max
 
 section LWW
 
+-- ANCHOR: mv_lww
 def mv_lwwₜ (σ : Type) [PartialOrder τ] [DecidableLT τ] [DecidableEq τ] [LinearOrder σ] [Zero σ] :
     CRDTₜ τ σ (Finset (Event τ σ)) σ :=
   map_interpretationₜ (λ s ↦
@@ -11,3 +12,4 @@ def mv_lwwₜ (σ : Type) [PartialOrder τ] [DecidableLT τ] [DecidableEq τ] [L
         | .none => 0
         | .some x => x
     ) (mv_regₜ σ)
+-- ANCHOR_END: mv_lww

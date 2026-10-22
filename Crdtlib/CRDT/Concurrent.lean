@@ -1,7 +1,9 @@
 import Mathlib.Order.Defs.PartialOrder
 
+-- ANCHOR: Concurrent
 structure Concurrent {τ : Type} [LE τ] (t₁ t₂ : τ) : Prop where
   concurrent : ¬ (t₁ ≤ t₂) ∧ ¬ (t₂ ≤ t₁)
+-- ANCHOR_END: Concurrent
 
 namespace Concurrent
 

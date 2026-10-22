@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="convergence" viewBox="0 0 600 230" role="img"
+  aria-labelledby="convergence-title convergence-desc">
+  <!-- Two replicas apply the concurrent operations add x and add y in different orders and end in
+       the same state. Colors come from the site's classes (cv-*, in base.css), so it follows the theme. -->
+  <title id="convergence-title">Two replicas converge</title>
+  <desc id="convergence-desc">Replica A applies add x and then add y. Replica B applies add y and then add x. Both end with the set containing x and y.</desc>
+
+  <text class="cv-label" x="0" y="75">Replica A</text>
+  <text class="cv-label" x="0" y="175">Replica B</text>
+  <path class="cv-line" d="M96 70H556"/>
+  <path class="cv-line" d="M96 170H556"/>
+  <path class="cv-tip" d="M564 70l-9-5v10z"/>
+  <path class="cv-tip" d="M564 170l-9-5v10z"/>
+
+  <path class="cv-msg cv-a" d="M160 70L374 167"/>
+  <path class="cv-msg cv-b" d="M200 170L316 76"/>
+
+  <circle class="cv-op cv-a" cx="160" cy="70" r="7"/>
+  <text class="cv-op-label" x="160" y="46">add x</text>
+  <circle class="cv-op cv-b" cx="200" cy="170" r="7"/>
+  <text class="cv-op-label" x="200" y="204">add y</text>
+
+  <circle class="cv-recv cv-b" cx="320" cy="70" r="6"/>
+  <circle class="cv-recv cv-a" cx="380" cy="170" r="6"/>
+
+  <text class="cv-state" x="240" y="52">{x}</text>
+  <text class="cv-state" x="470" y="52">{x, y}</text>
+  <text class="cv-state" x="290" y="204">{y}</text>
+  <text class="cv-state" x="470" y="204">{x, y}</text>
+
+  <path class="cv-join" d="M470 78V104M470 136V162"/>
+  <rect class="cv-badge" x="404" y="104" width="132" height="32" rx="16"/>
+  <text class="cv-badge-text" x="470" y="125">same state</text>
+</svg>

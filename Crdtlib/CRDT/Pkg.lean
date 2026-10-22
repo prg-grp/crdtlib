@@ -1,3 +1,4 @@
+-- ANCHOR: Event
 structure Pkg (τ : Type) (υ : Type u) where
   t : τ
   v : υ
@@ -8,6 +9,7 @@ def Event := Pkg
 
 @[simp, reducible]
 def Event.o (e : Event τ υ) := e.v
+-- ANCHOR_END: Event
 
 instance [DecidableEq τ] [DecidableEq υ] : DecidableEq (Event τ υ) := inferInstance
 namespace Pkg
