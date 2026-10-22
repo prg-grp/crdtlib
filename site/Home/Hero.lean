@@ -17,7 +17,7 @@ block_component +directive hero where
           <p class="hero-lede">
             {{ siteName }} " is a "<a href="https://lean-lang.org">"Lean 4"</a>" library "
             "with reusable combinators that can be used to construct conflict-free replicated data types "
-            "without needing to prove convergence at every step"
+            "without needing to prove convergence at every step. "
             "The combinators each preserve convergence, so whatever you assemble from them is a CRDT by construction: "
             "verified in Lean and executable."
           </p>
