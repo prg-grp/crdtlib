@@ -1,4 +1,8 @@
-import VersoBlog
+module
+
+public import VersoBlog
+
+@[expose] public section
 
 open Verso.Output Html
 

@@ -1,5 +1,9 @@
-import Crdtlib.CRDT.Basic
-import Mathlib.Data.Set.Finite.Basic
+module
+
+public import Crdtlib.CRDT.Basic
+public import Mathlib.Data.Set.Finite.Basic
+
+@[expose] public section
 
 section MVReg
 

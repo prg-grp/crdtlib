@@ -1,14 +1,24 @@
-import VersoBlog
+module
 
-import Home.Home
-import Home.NotFound
-import Home.Publications
-import Home.Theme
-import Docs.Pages.Overview
-import Docs.Pages.GetStarted
-import Docs.Pages.Model
-import Docs.Pages.Combinators
-import Docs.Pages.Catalog
+-- `main` needs the components' private implementations; see its documentation.
+import all Shared.Cards
+import all Shared.Layout
+import all Shared.Diagrams
+import all Docs.Components
+import all Home.Hero
+import all Home.Carousel
+public import VersoBlog
+public import Home.Home
+public import Home.NotFound
+public import Home.Publications
+public import Home.Theme
+public import Docs.Pages.Overview
+public import Docs.Pages.GetStarted
+public import Docs.Pages.Model
+public import Docs.Pages.Combinators
+public import Docs.Pages.Catalog
+
+@[expose] public section
 
 open Verso.Genre.Blog
 open Verso.Genre.Blog.Site.Syntax
@@ -34,5 +44,12 @@ def crdtlibSite : Site :=
 
     "404" Home.NotFound
 
-def main (args : List String) : IO UInt32 :=
-  blogMain Home.theme crdtlibSite {} args
+end
+
+/--
+Generates the site. It is public but not exposed: `blogMain` collects every registered component,
+and `block_component` declares each component's implementation privately, which an exposed body
+cannot refer to. The `import all`s above make those implementations visible here.
+-/
+public def main (args : List String) : IO UInt32 :=
+  Verso.Genre.Blog.blogMain Home.theme crdtlibSite {} args

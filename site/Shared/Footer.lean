@@ -1,15 +1,18 @@
-import VersoBlog
+module
 
-import Shared.Brand
-import Shared.Icons
-import Shared.Data
+public import VersoBlog
+public import Shared.Brand
+public import Shared.Icons
+public import Shared.Data
+
+@[expose] public section
 
 open Verso.Output Html
 
 namespace Shared
 namespace Components
 
-private def footerLink (label url : String) : Html := {{
+def footerLink (label url : String) : Html := {{
   <li><a href={{ url }}>{{ label }}</a></li>
 }}
 

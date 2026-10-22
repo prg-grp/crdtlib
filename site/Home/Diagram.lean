@@ -1,5 +1,9 @@
-import Shared
-import Home.Showcase
+module
+
+public import Shared
+public import Home.Showcase
+
+@[expose] public section
 
 open Verso.Output Html
 open Shared

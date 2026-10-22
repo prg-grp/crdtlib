@@ -1,4 +1,8 @@
-import Shared.Basic
+module
+
+public import Shared.Basic
+
+@[expose] public section
 
 /-!
 # Site data
@@ -112,10 +116,10 @@ structure CrdtInfo where
 
 def CrdtInfo.slug (c : CrdtInfo) : String := Components.createSlug c.name
 
-private def gsetR : Recipe :=
+def gsetR : Recipe :=
   derived "map_op" #[principal "associate σ" #[leaf "gcounter"]]
 
-private def poEdgesR : Recipe :=
+def poEdgesR : Recipe :=
   principal "traverse" #[principal "associate σ" #[leaf "gset σ"]]
 
 def crdts : Array CrdtInfo := #[

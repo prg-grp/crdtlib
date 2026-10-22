@@ -1,8 +1,12 @@
-import Crdtlib.CRDT.Std.Set.GSet
-import Crdtlib.CRDT.Std.LWW.MVLWW
-import Crdtlib.Combinator.Principal.Product
-import Crdtlib.Combinator.Principal.Associate
-import Mathlib.Data.String.Basic
+module
+
+public import Crdtlib.CRDT.Std.Set.GSet
+public import Crdtlib.CRDT.Std.LWW.MVLWW
+public import Crdtlib.Combinator.Principal.Product
+public import Crdtlib.Combinator.Principal.Associate
+public import Mathlib.Data.String.Basic
+
+@[expose] public section
 
 private instance : Zero String := ⟨""⟩
 

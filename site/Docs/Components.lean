@@ -1,6 +1,10 @@
-import VersoBlog
+module
 
-import Shared
+public import VersoBlog
+public import Shared.Directive
+public import Shared
+
+@[expose] public section
 
 open Verso Genre Blog
 open Verso.Output Html
@@ -31,7 +35,7 @@ def guides : Array Guide := #[
 ]
 
 /-- Cards linking to the documentation pages. -/
-block_component +directive guideCards where
+block_component guideCards where
   toHtml _ _ _ _ _ := do
     return {{
       <div class="card-grid guide-grid">
@@ -46,6 +50,8 @@ block_component +directive guideCards where
       </div>
     }}
 
+block_directive guideCards
+
 /-- Where the library's modules are, for readers who want to follow along in the source. -/
 def sourceMap : Array (String × String) := #[
   ("Crdtlib/CRDT/Basic.lean", "CRDT and CRDTₜ, and the conversion between them"),
@@ -56,7 +62,7 @@ def sourceMap : Array (String × String) := #[
   ("Crdtlib/CRDT/Std/", "The catalog: registers, counters, sets and lists")
 ]
 
-block_component +directive sourceTable where
+block_component sourceTable where
   toHtml _ _ _ _ _ := do
     return {{
       <div class="table-scroll">
@@ -73,5 +79,7 @@ block_component +directive sourceTable where
         </table>
       </div>
     }}
+
+block_directive sourceTable
 
 end Docs

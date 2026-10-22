@@ -1,10 +1,14 @@
-import Crdtlib.CRDT.Basic
-import Mathlib.Tactic.Conv
-import Batteries.Logic
+module
+
+public import Crdtlib.CRDT.Basic
+public import Mathlib.Tactic.Conv
+public import Batteries.Logic
+
+@[expose] public section
 
 section Traverse
 
-private def recurse_k {F : Type u} [SizeOf F]
+def recurse_k {F : Type u} [SizeOf F]
     (f : (o : F) → Option (ωₛ × ((o' : F) ×' sizeOf o' < sizeOf o)))
     (effect : ωₛ → σ → σ) (o : F) : σ → σ :=
   match f o with
@@ -67,7 +71,7 @@ def traverse_rec {F : Type u} [SizeOf F] (lift : ωₜ → F)
     ext s
     exact (recurse_k_comm f c.effect c.commutative (lift e₁) (lift e₂) s).symm
 
-private def listStep : (o : List ωₛ) → Option (ωₛ × ((o' : List ωₛ) ×' sizeOf o' < sizeOf o))
+def listStep : (o : List ωₛ) → Option (ωₛ × ((o' : List ωₛ) ×' sizeOf o' < sizeOf o))
   | .nil => .none
   | .cons x xs => .some ⟨x, xs, by simp⟩
 

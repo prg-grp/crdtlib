@@ -1,4 +1,8 @@
-import Mathlib.Order.Defs.PartialOrder
+module
+
+public import Mathlib.Order.Defs.PartialOrder
+
+@[expose] public section
 
 -- ANCHOR: Concurrent
 structure Concurrent {τ : Type} [LE τ] (t₁ t₂ : τ) : Prop where

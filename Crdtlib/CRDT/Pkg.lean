@@ -1,3 +1,7 @@
+module
+
+@[expose] public section
+
 -- ANCHOR: Event
 structure Pkg (τ : Type) (υ : Type u) where
   t : τ

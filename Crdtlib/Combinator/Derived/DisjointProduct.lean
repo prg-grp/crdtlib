@@ -1,5 +1,9 @@
-import Crdtlib.Combinator.Principal.Product
-import Crdtlib.Combinator.Principal.Traverse
+module
+
+public import Crdtlib.Combinator.Principal.Product
+public import Crdtlib.Combinator.Principal.Traverse
+
+@[expose] public section
 
 open Prod
 open Pkg

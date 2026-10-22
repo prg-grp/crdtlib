@@ -1,8 +1,12 @@
-import VersoBlog
+module
 
-import Shared
-import Home.Diagram
-import Home.Showcase
+public import VersoBlog
+public import Shared.Directive
+public import Shared
+public import Home.Diagram
+public import Home.Showcase
+
+@[expose] public section
 
 open Verso Genre Blog
 open Verso.Output Html
@@ -140,7 +144,7 @@ def legend : Html := {{
 The carousel, under a short introduction: `title` in the left column, and the directive's contents
 in the right one.
 -/
-block_component +directive showcase (title : String) where
+block_component showcase (title : String) where
   toHtml _ _ _ goB contents := do
     let mut rendered := #[]
     for h : i in [0:slides.size] do
@@ -178,5 +182,7 @@ block_component +directive showcase (title : String) where
         </div>
       </section>
     }}
+
+block_directive showcase (title : String)
 
 end Home

@@ -1,6 +1,10 @@
-import Mathlib.Algebra.Group.Defs
-import Mathlib.Data.Multiset.AddSub
-import Mathlib.Data.Multiset.Sort
+module
+
+public import Mathlib.Algebra.Group.Defs
+public import Mathlib.Data.Multiset.AddSub
+public import Mathlib.Data.Multiset.Sort
+
+@[expose] public section
 
 section SetBasic
 variable (σ : Type*)

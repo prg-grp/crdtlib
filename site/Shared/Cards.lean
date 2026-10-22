@@ -1,8 +1,12 @@
-import VersoBlog
+module
 
-import Shared.Brand
-import Shared.Data
-import Shared.Tools
+public import VersoBlog
+public import Shared.Directive
+public import Shared.Brand
+public import Shared.Data
+public import Shared.Tools
+
+@[expose] public section
 
 open Verso Genre Blog
 open Verso.Output Html
@@ -82,20 +86,24 @@ def legend : Html := {{
 }}
 
 /-- Cards for the combinators with the given role (`principal` or `derived`). -/
-block_component +directive combinatorGrid (role : String) where
+block_component combinatorGrid (role : String) where
   toHtml _ _ _ _ _ := do
     let cs := combinators.filter (·.role.cls == role)
     if cs.isEmpty then Verso.reportError s!"combinatorGrid: no combinators with role '{role}'"
     return {{ <div class="card-grid comb-grid">{{ cs.map (·.card) }}</div> }}
 
+block_directive combinatorGrid (role : String)
+
 /-- Cards for the catalog: `featured` for the home page, `all` for everything. -/
-block_component +directive crdtGrid (which : String) where
+block_component crdtGrid (which : String) where
   toHtml _ _ _ _ _ := do
     let cs := if which == "all" then crdts else crdts.filter (·.featured)
     return {{ <div class="card-grid crdt-grid">{{ cs.map (·.card) }}</div> }}
 
+block_directive crdtGrid (which : String)
+
 /-- The recipe and type parameters of one CRDT from the catalog, by display name. -/
-block_component +directive recipe (name : String) where
+block_component recipe (name : String) where
   toHtml _ _ _ _ _ := do
     let some c := findCrdt? name
       | Verso.reportError s!"recipe: unknown CRDT '{name}'"; return .empty
@@ -106,8 +114,10 @@ block_component +directive recipe (name : String) where
       </figure>
     }}
 
+block_directive recipe (name : String)
+
 /-- How a combinator changes the type parameters, by its paper name. -/
-block_component +directive combinatorSignature (name : String) where
+block_component combinatorSignature (name : String) where
   toHtml _ _ _ _ _ := do
     let some c := findCombinator? name
       | Verso.reportError s!"combinatorSignature: unknown combinator '{name}'"; return .empty
@@ -121,8 +131,12 @@ block_component +directive combinatorSignature (name : String) where
       </div>
     }}
 
-block_component +directive recipeLegend where
+block_directive combinatorSignature (name : String)
+
+block_component recipeLegend where
   toHtml _ _ _ _ _ := pure legend
+
+block_directive recipeLegend
 
 private def useCell : Use → Html
   | .direct => {{ <td><span class="use direct" title="used directly">"●"</span></td> }}
@@ -130,7 +144,7 @@ private def useCell : Use → Html
   | .none => {{ <td><span class="use none" aria-label="not used"/></td> }}
 
 /-- The paper's table of which combinators each construction uses. -/
-block_component +directive usageMatrix where
+block_component usageMatrix where
   toHtml _ _ _ _ _ := do
     for g in usageTable do
       for r in g.rows do
@@ -170,6 +184,8 @@ block_component +directive usageMatrix where
       </figure>
     }}
 
+block_directive usageMatrix
+
 /-- A publication in the list: venue, title, authors, links, and a BibTeX entry to expand. -/
 def PaperInfo.listItem (p : PaperInfo) : Html := {{
   <li class="pub">
@@ -188,7 +204,9 @@ def PaperInfo.listItem (p : PaperInfo) : Html := {{
 }}
 
 /-- Every publication in `publications`. -/
-block_component +directive publicationList where
+block_component publicationList where
   toHtml _ _ _ _ _ := pure {{ <ol class="pub-list">{{ publications.map (·.listItem) }}</ol> }}
+
+block_directive publicationList
 
 end Shared

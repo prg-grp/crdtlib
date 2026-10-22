@@ -1,7 +1,10 @@
-import VersoBlog
+module
 
-import Shared
-import Docs.Theme
+public import VersoBlog
+public import Shared
+public import Docs.Theme
+
+@[expose] public section
 
 open Verso Genre Blog Template Output Html Multi
 open Shared Theme Components
@@ -43,7 +46,7 @@ def topItems (path : Path) : Array Item :=
     { title := "Publications", url := "/publications/", active := path == #["publications"] }
   ]
 
-private def primaryTemplate : TemplateM Html := do
+def primaryTemplate : TemplateM Html := do
   let path ← currentPath
   let docs := Docs.isDocs path
   return {{
@@ -62,7 +65,7 @@ private def primaryTemplate : TemplateM Html := do
     </html>
   }}
 
-private def pageTemplate : TemplateM Html := do
+def pageTemplate : TemplateM Html := do
   if Docs.isDocs (← currentPath) then Docs.pageTemplate
   else return {{ <main class="free">{{ ← param "content" }}</main> }}
 

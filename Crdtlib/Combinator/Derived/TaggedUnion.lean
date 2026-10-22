@@ -1,8 +1,12 @@
-import Crdtlib.CRDT.Std.LWW.MVLWW
-import Crdtlib.Combinator.Principal.MapInterpretation
-import Crdtlib.Combinator.Principal.MapState
-import Crdtlib.Combinator.Principal.Traverse
-import Crdtlib.Combinator.Derived.DisjointProduct
+module
+
+public import Crdtlib.CRDT.Std.LWW.MVLWW
+public import Crdtlib.Combinator.Principal.MapInterpretation
+public import Crdtlib.Combinator.Principal.MapState
+public import Crdtlib.Combinator.Principal.Traverse
+public import Crdtlib.Combinator.Derived.DisjointProduct
+
+@[expose] public section
 
 section TaggedSum
 

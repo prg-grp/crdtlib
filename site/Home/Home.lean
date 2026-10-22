@@ -1,8 +1,11 @@
-import VersoBlog
+module
 
-import Shared
-import Home.Carousel
-import Home.Hero
+public import VersoBlog
+public import Shared
+public import Home.Carousel
+public import Home.Hero
+
+@[expose] public section
 
 open Verso.Genre.Blog (Page)
 open Verso.Code.External

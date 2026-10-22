@@ -1,4 +1,10 @@
-import Crdtlib
+module
+
+public import Crdtlib
+-- The `#guard`s below run the examples while this file compiles, which needs the compiled library.
+meta import Crdtlib
+
+@[expose] public section
 
 /-!
 Examples shown on the "Get started" page of the website.

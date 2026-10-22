@@ -1,8 +1,12 @@
-import Crdtlib.CRDT.Std.Set.Basic
-import Crdtlib.CRDT.Std.Set.GSet
-import Crdtlib.Combinator.Principal.MapInterpretation
-import Crdtlib.Combinator.Derived.DisjointProduct
-import Crdtlib.Combinator.Derived.MapOp
+module
+
+public import Crdtlib.CRDT.Std.Set.Basic
+public import Crdtlib.CRDT.Std.Set.GSet
+public import Crdtlib.Combinator.Principal.MapInterpretation
+public import Crdtlib.Combinator.Derived.DisjointProduct
+public import Crdtlib.Combinator.Derived.MapOp
+
+@[expose] public section
 
 section TPSet
 

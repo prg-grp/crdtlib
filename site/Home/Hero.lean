@@ -1,6 +1,10 @@
-import VersoBlog
+module
 
-import Shared
+public import VersoBlog
+public import Shared.Directive
+public import Shared
+
+@[expose] public section
 
 open Verso Genre Blog
 open Verso.Output Html
@@ -8,7 +12,7 @@ open Shared
 
 namespace Home
 
-block_component +directive hero where
+block_component hero where
   toHtml _ _ _ _ _ := do
     return {{
       <section class="hero" aria-label="Introduction">
@@ -29,5 +33,7 @@ block_component +directive hero where
         </div>
       </section>
     }}
+
+block_directive hero
 
 end Home

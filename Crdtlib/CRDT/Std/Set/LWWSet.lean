@@ -1,9 +1,12 @@
+module
 
-import Crdtlib.Combinator.Principal.MapInterpretation
-import Crdtlib.Combinator.Derived.MapOp
-import Crdtlib.Combinator.Derived.DisjointProduct
-import Crdtlib.CRDT.Std.Set.GSet
-import Mathlib.Data.Finset.Basic
+public import Crdtlib.Combinator.Principal.MapInterpretation
+public import Crdtlib.Combinator.Derived.MapOp
+public import Crdtlib.Combinator.Derived.DisjointProduct
+public import Crdtlib.CRDT.Std.Set.GSet
+public import Mathlib.Data.Finset.Basic
+
+@[expose] public section
 
 -- ANCHOR: lww_element_set
 def lww_element_set (σ : Type) [PartialOrder τ] [DecidableLT τ] [DecidableEq τ] [Hashable τ]

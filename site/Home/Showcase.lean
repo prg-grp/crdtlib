@@ -1,4 +1,8 @@
-import Shared
+module
+
+public import Shared
+
+@[expose] public section
 
 /-!
 # The showcase
@@ -95,13 +99,13 @@ structure Slide where
   reference : String × String
 
 /-- A catalog entry, by its name in the catalog; `label` names it in the link, if different. -/
-private def catalogEntry (name : String) (label : String := name) : String × String :=
+def catalogEntry (name : String) (label : String := name) : String × String :=
   match findCrdt? name with
   | some c => (label, docsUrl "catalog" c.slug)
   | none => (label, docsUrl "catalog")
 
 /-- The paper, for the case studies. -/
-private def paperEntry : String × String := ("Paper", s!"https://doi.org/{paper.doi}")
+def paperEntry : String × String := ("Paper", s!"https://doi.org/{paper.doi}")
 
 def slides : Array Slide := #[
   { tab := "Task"

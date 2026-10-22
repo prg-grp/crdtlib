@@ -1,6 +1,10 @@
-import Verso.Doc.ArgParse
-import Verso.Doc.Html
-import VersoBlog
+module
+
+public import Verso.Doc.ArgParse
+public import Verso.Doc.Html
+public import VersoBlog
+
+@[expose] public section
 
 open Verso.Genre.Blog
 open Verso.Output Html

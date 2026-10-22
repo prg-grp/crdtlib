@@ -1,6 +1,10 @@
-import Crdtlib.CRDT.Basic
-import Mathlib.Algebra.Group.Defs
-import Mathlib.Data.Set.Finite.Basic
+module
+
+public import Crdtlib.CRDT.Basic
+public import Mathlib.Algebra.Group.Defs
+public import Mathlib.Data.Set.Finite.Basic
+
+@[expose] public section
 
 section ACFun
 

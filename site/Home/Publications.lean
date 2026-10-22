@@ -1,6 +1,9 @@
-import VersoBlog
+module
 
-import Shared
+public import VersoBlog
+public import Shared
+
+@[expose] public section
 
 open Verso.Genre.Blog (Page)
 

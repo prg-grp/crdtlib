@@ -1,5 +1,9 @@
-import Crdtlib.Combinator.Principal.Product
-import Crdtlib.Combinator.Derived.MapOp
+module
+
+public import Crdtlib.Combinator.Principal.Product
+public import Crdtlib.Combinator.Derived.MapOp
+
+@[expose] public section
 
 -- ANCHOR: joint_product
 def joint_product (c₁ : CRDT ω₁ σ₁ γ₁) (c₂ : CRDT ω₂ σ₂ γ₂) :

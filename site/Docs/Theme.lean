@@ -1,8 +1,10 @@
-import VersoBlog
+module
 
-import Shared
+public import VersoBlog
+public import Shared
+public import Docs.Toc
 
-import Docs.Toc
+@[expose] public section
 
 open Verso Genre Blog Template Output Html Multi
 open Shared Theme Components

@@ -1,4 +1,9 @@
-import VersoBlog
+module
+
+public import VersoBlog
+public import Shared.Directive
+
+@[expose] public section
 
 open Verso Genre Blog
 open Verso.Output Html
@@ -12,7 +17,7 @@ its colors come from CSS and follow the theme.
 -/
 def convergenceSvg : Html := .text false (include_str "../../assets/figures/convergence.svg")
 
-block_component +directive convergence where
+block_component convergence where
   toHtml _ _ _ _ _ := do
     return {{
       <figure class="figure">
@@ -23,5 +28,7 @@ block_component +directive convergence where
         </figcaption>
       </figure>
     }}
+
+block_directive convergence
 
 end Shared

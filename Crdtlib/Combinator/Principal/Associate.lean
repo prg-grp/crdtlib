@@ -1,7 +1,11 @@
-import Crdtlib.CRDT.Basic
-import Std.Data.ExtHashMap
-import Mathlib.Algebra.Group.Defs
-import Mathlib.Order.Defs.LinearOrder
+module
+
+public import Crdtlib.CRDT.Basic
+public import Std.Data.ExtHashMap
+public import Mathlib.Algebra.Group.Defs
+public import Mathlib.Order.Defs.LinearOrder
+
+@[expose] public section
 
 section Associate
 

@@ -1,14 +1,18 @@
-import Crdtlib.CRDT.Primitive.ACFun
-import Crdtlib.CRDT.Std.Set.GSet
-import Crdtlib.CRDT.Std.Set.PNSet
-import Crdtlib.Combinator.Principal.Associate
-import Crdtlib.Combinator.Derived.MapOp
-import Crdtlib.Combinator.Derived.JointProduct
-import Crdtlib.Combinator.Principal.MapInterpretation
-import Crdtlib.Combinator.Principal.Traverse
-import Crdtlib.Combinator.Derived.DisjointProduct
-import Crdtlib.Combinator.Principal.MapState
-import Batteries
+module
+
+public import Crdtlib.CRDT.Primitive.ACFun
+public import Crdtlib.CRDT.Std.Set.GSet
+public import Crdtlib.CRDT.Std.Set.PNSet
+public import Crdtlib.Combinator.Principal.Associate
+public import Crdtlib.Combinator.Derived.MapOp
+public import Crdtlib.Combinator.Derived.JointProduct
+public import Crdtlib.Combinator.Principal.MapInterpretation
+public import Crdtlib.Combinator.Principal.Traverse
+public import Crdtlib.Combinator.Derived.DisjointProduct
+public import Crdtlib.Combinator.Principal.MapState
+public import Batteries
+
+@[expose] public section
 
 section POList
 
@@ -17,7 +21,7 @@ open Batteries
 instance : Zero (Finset α) where
   zero := ∅
 
-private def po_traversal {σ : Type*}
+def po_traversal {σ : Type*}
     [DecidableEq σ] [LinearOrder σ] [Bot σ] [Hashable σ]
     (s : SetInterp σ × AssociateInterp σ (SetInterp σ))
     : List σ :=
@@ -83,7 +87,7 @@ def polistₜ {τ : Type} [PartialOrder τ] [LinearOrder σ] [Bot σ] :
     CRDTₜ τ (ListOp σ) (POListState σ) (List σ) :=
   (polist σ).toCRDTₜ τ
 
-private def POL.po_traversal {σ : Type*}
+def POL.po_traversal {σ : Type*}
     [DecidableEq σ] [LinearOrder σ] [Bot σ] [Hashable σ]
     (s : (SetInterp σ × AssociateInterp σ (SetInterp σ)) × SetInterp σ) : List σ :=
   let ⟨⟨add, adj⟩, rem⟩ := s

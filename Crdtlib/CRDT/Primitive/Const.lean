@@ -1,4 +1,8 @@
-import Crdtlib.CRDT.Basic
+module
+
+public import Crdtlib.CRDT.Basic
+
+@[expose] public section
 
 def const : CRDT ω σ σ where
   effect _ := id

@@ -1,4 +1,8 @@
-import Crdtlib.Combinator.Principal.Traverse
+module
+
+public import Crdtlib.Combinator.Principal.Traverse
+
+@[expose] public section
 
 def map_opₜ [PartialOrder τ] (f : ωₜ → ωₛ) (c : CRDTₜ τ ωₛ σ γ) : CRDTₜ τ ωₜ σ γ :=
   traverseₜ (List.singleton ∘ f) c

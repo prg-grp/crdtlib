@@ -1,8 +1,12 @@
-import Crdtlib.CRDT.Primitive.ACFun
-import Crdtlib.CRDT.Std.Set.Basic
-import Crdtlib.Combinator.Principal.Associate
-import Crdtlib.Combinator.Principal.MapInterpretation
-import Crdtlib.Combinator.Derived.MapOp
+module
+
+public import Crdtlib.CRDT.Primitive.ACFun
+public import Crdtlib.CRDT.Std.Set.Basic
+public import Crdtlib.Combinator.Principal.Associate
+public import Crdtlib.Combinator.Principal.MapInterpretation
+public import Crdtlib.Combinator.Derived.MapOp
+
+@[expose] public section
 
 -- ANCHOR: pnset
 def pnset (σ : Type*) [DecidableEq σ] [Hashable σ] : CRDT (SetOp σ) (Associate σ Int) (SetInterp σ) :=

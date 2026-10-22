@@ -1,6 +1,10 @@
-import Crdtlib.CRDT.Primitive.MVReg
-import Crdtlib.Combinator.Principal.MapInterpretation
-import Mathlib.Data.Finset.Max
+module
+
+public import Crdtlib.CRDT.Primitive.MVReg
+public import Crdtlib.Combinator.Principal.MapInterpretation
+public import Mathlib.Data.Finset.Max
+
+@[expose] public section
 
 section LWW
 

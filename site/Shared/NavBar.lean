@@ -1,7 +1,10 @@
-import VersoBlog
+module
 
-import Shared.Brand
-import Shared.Icons
+public import VersoBlog
+public import Shared.Brand
+public import Shared.Icons
+
+@[expose] public section
 
 open Verso.Output Html
 

@@ -1,6 +1,9 @@
-import VersoBlog
+module
 
-import Shared.Brand
+public import VersoBlog
+public import Shared.Brand
+
+@[expose] public section
 
 open Verso.Genre Blog Template
 open Verso.Output Html

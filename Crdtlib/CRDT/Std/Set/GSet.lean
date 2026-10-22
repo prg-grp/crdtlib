@@ -1,9 +1,13 @@
-import Crdtlib.CRDT.Basic
-import Crdtlib.CRDT.Std.Set.Basic
-import Crdtlib.CRDT.Primitive.ACFun
-import Crdtlib.Combinator.Principal.Associate
-import Crdtlib.Combinator.Principal.MapInterpretation
-import Crdtlib.Combinator.Derived.MapOp
+module
+
+public import Crdtlib.CRDT.Basic
+public import Crdtlib.CRDT.Std.Set.Basic
+public import Crdtlib.CRDT.Primitive.ACFun
+public import Crdtlib.Combinator.Principal.Associate
+public import Crdtlib.Combinator.Principal.MapInterpretation
+public import Crdtlib.Combinator.Derived.MapOp
+
+@[expose] public section
 
 section GSet
 

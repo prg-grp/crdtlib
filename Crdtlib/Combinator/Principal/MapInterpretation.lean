@@ -1,5 +1,9 @@
-import Crdtlib.CRDT.Basic
-import Mathlib.Logic.Function.Defs
+module
+
+public import Crdtlib.CRDT.Basic
+public import Mathlib.Logic.Function.Defs
+
+@[expose] public section
 
 section MapInterpretation
 

@@ -1,4 +1,8 @@
-import Crdtlib.CRDT.Primitive.ACFun
+module
+
+public import Crdtlib.CRDT.Primitive.ACFun
+
+@[expose] public section
 
 -- ANCHOR: counter64
 def counter64 : CRDT Int64 Int64 Int64 := ac_fun Int64 (· + ·)

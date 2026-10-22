@@ -1,11 +1,17 @@
-import Shared.Basic
-import Shared.Brand
-import Shared.Cards
-import Shared.Data
-import Shared.Diagrams
-import Shared.Footer
-import Shared.Head
-import Shared.Icons
-import Shared.Layout
-import Shared.NavBar
-import Shared.Tools
+module
+
+public import Shared.Basic
+public import Shared.Brand
+public import Shared.Cards
+public import Shared.Data
+public import Shared.Diagrams
+public import Shared.Directive
+public import Shared.Footer
+public import Shared.Head
+public import Shared.Icons
+public import Shared.Layout
+public import Shared.NavBar
+public import Shared.Tools
+
+@[expose] public section
+

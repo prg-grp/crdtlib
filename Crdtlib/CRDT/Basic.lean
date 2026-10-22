@@ -1,5 +1,9 @@
-import Crdtlib.CRDT.Pkg
-import Crdtlib.CRDT.Concurrent
+module
+
+public import Crdtlib.CRDT.Pkg
+public import Crdtlib.CRDT.Concurrent
+
+@[expose] public section
 
 -- ANCHOR: CRDTt
 structure CRDTₜ (τ : Type) [PartialOrder τ] (ω σ γ : Type*) where

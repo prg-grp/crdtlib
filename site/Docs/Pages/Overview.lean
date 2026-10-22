@@ -1,7 +1,10 @@
-import VersoBlog
+module
 
-import Shared
-import Docs.Components
+public import VersoBlog
+public import Shared
+public import Docs.Components
+
+@[expose] public section
 
 open Verso.Genre.Blog (Page)
 

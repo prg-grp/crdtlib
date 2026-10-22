@@ -1,5 +1,9 @@
-import Crdtlib.CRDT.Primitive.ACFun
-import Mathlib.Data.Prod.Lex
+module
+
+public import Crdtlib.CRDT.Primitive.ACFun
+public import Mathlib.Data.Prod.Lex
+
+@[expose] public section
 
 -- ANCHOR: lww
 structure Lamport (σ : Type) where (t : Nat) (s : σ)

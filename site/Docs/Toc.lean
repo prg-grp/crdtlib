@@ -1,6 +1,9 @@
-import VersoBlog
+module
 
-import Shared.Basic
+public import VersoBlog
+public import Shared.Basic
+
+@[expose] public section
 
 open Shared Components
 open Verso Output Html
