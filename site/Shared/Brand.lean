@@ -28,15 +28,13 @@ def docsUrl (page : String := "") (anchor : String := "") : String :=
 namespace Components
 
 /--
-The logo, from `assets/logo.svg`, its only source, which is also the favicon. It is read when this
-module is compiled: after changing the file, rebuild with `lake build Shared.Brand`.
+The logo, from `assets/logo.svg`: the mark, a tree of a combinator over two CRDTs, and the name.
+`base.css` colors the name like the text around it, so this one version serves both themes. The
+mark alone, `assets/logo-mark.svg`, is the favicon. The logo is read when this module is compiled:
+after changing the file, rebuild with `lake build Shared.Brand`.
 -/
-def logoMark : Html := {{
-  <span class="logo-mark" aria-hidden="true">{{ Html.text false (include_str "../../assets/logo.svg") }}</span>
-}}
-
 def wordmark : Html := {{
-  <span class="wordmark">{{ logoMark }}<span class="wordmark-text">{{ siteName }}</span></span>
+  <span class="wordmark">{{ Html.text false (include_str "../../assets/logo.svg") }}</span>
 }}
 
 end Components

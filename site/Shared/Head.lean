@@ -65,7 +65,7 @@ def head (cfg : HeadConfig) : TemplateM Html := do
       <meta name="description" content={{ cfg.description }}/>
       <meta name="theme-color" content="#f7f6f2" media="(prefers-color-scheme: light)"/>
       <meta name="theme-color" content="#0e1117" media="(prefers-color-scheme: dark)"/>
-      <link rel="icon" href="/assets/logo.svg" type="image/svg+xml"/>
+      <link rel="icon" href="/assets/logo-mark.svg" type="image/svg+xml"/>
       <link rel="icon" href="/assets/favicon.ico" sizes="32x32"/>
       <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png"/>
       {{ cfg.social.toHtml }}

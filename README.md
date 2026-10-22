@@ -1,8 +1,9 @@
-<p align="center">
-  <img src="assets/logo.svg" width="112" alt="crdtlib logo: a square holding three bars">
-</p>
-
-<h1 align="center">crdtlib</h1>
+<h1 align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="assets/logo-dark.svg">
+    <img src="assets/logo.svg" width="320" alt="crdtlib">
+  </picture>
+</h1>
 
 <p align="center">Composable, verified operation-based CRDTs in Lean 4.</p>
 
@@ -109,7 +110,7 @@ JSON tree CRDT as expressive as Automerge, are in the paper's artifact
 - `Examples/`: examples shown in the documentation, compiled with it
 - `bindings/rust/`: Rust bindings
 - `site/`: the website and documentation (see `site/README.md`)
-- `assets/`: the logo, icons and drawings
+- `assets/`: the logo (`logo.svg`, and `logo-dark.svg` for dark backgrounds), icons and drawings
 
 ## Citing
 

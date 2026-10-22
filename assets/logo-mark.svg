@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="crdtlib">
+  <!-- The crdtlib mark: a composed datatype as a tree, a combinator at the root (indigo) over two
+       CRDTs (teal and orange). The full logo, with the name, is logo.svg. -->
+  <g class="logo-tree">
+    <path class="logo-edge" d="M32 16L15 49M32 16L49 49" fill="none" stroke="#6b7282" stroke-width="4.5"/>
+    <circle class="logo-root" cx="32" cy="15" r="11" fill="#3341c2"/>
+    <rect class="logo-left" x="4" y="38" width="22" height="22" fill="#0a7a6b"/>
+    <rect class="logo-right" x="38" y="38" width="22" height="22" fill="#b04d17"/>
+  </g>
+</svg>
