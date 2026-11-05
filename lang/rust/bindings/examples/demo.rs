@@ -22,5 +22,4 @@ fn main() {
   for k in [42, 17, 0, 99] {
     println!("  {k:>2}: {}", i.mem(k));
   }
-
 }

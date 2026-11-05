@@ -4,4 +4,5 @@ resolver = "2"
 members = [
   "lang/rust/api",
   "lang/rust/bindings",
+  "lang/rust/lib",
 ]

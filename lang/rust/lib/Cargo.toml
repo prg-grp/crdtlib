@@ -1,0 +1,9 @@
+[package]
+name = "crdtlib"
+description = "Native Rust implementation of the crdtlib primitives and combinators"
+version.workspace = true
+edition = "2024"
+license = "Apache-2.0"
+
+[dependencies]
+crdtlib-api = { path = "../api" }

@@ -108,7 +108,10 @@ JSON tree CRDT as expressive as Automerge, are in the paper's artifact
 
 - `Crdtlib/`: the library: the CRDT definition, primitives, combinators, and a catalog of CRDTs
 - `Examples/`: examples shown in the documentation, compiled with it
-- `lang/rust/bindings/`: Rust bindings
+- `lang/rust/`: Rust language support
+  - `api/`: `crdtlib-api`, CRDT traits shared by bindings and lib
+  - `lib/`: `crdtlib`, primitives and combinators reimplemented in Rust, for building CRDTs in Rust
+  - `bindings/`: `crdtlib-bindings`, the Rust FFI bindings for CRDTs implemented in Lean
 - `site/`: the website and documentation (see `site/README.md`)
 - `assets/`: the logo (`logo.svg`, and `logo-dark.svg` for dark backgrounds), icons and drawings
 
