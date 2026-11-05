@@ -1,0 +1,12 @@
+[package]
+name = "crdtlib-bindings"
+description = "The verified crdtlib CRDTs, compiled from Lean, behind the crdtlib-api traits"
+version.workspace = true
+edition = "2024"
+license = "Apache-2.0"
+
+[dependencies]
+crdtlib-api = { path = "../api" }
+
+[build-dependencies]
+pkg-config = "0.3"

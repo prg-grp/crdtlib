@@ -108,7 +108,7 @@ JSON tree CRDT as expressive as Automerge, are in the paper's artifact
 
 - `Crdtlib/`: the library: the CRDT definition, primitives, combinators, and a catalog of CRDTs
 - `Examples/`: examples shown in the documentation, compiled with it
-- `bindings/rust/`: Rust bindings
+- `lang/rust/bindings/`: Rust bindings
 - `site/`: the website and documentation (see `site/README.md`)
 - `assets/`: the logo (`logo.svg`, and `logo-dark.svg` for dark backgrounds), icons and drawings
 

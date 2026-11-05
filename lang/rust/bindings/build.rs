@@ -2,7 +2,7 @@ fn main() {
   println!("cargo:rerun-if-changed=build.rs");
 
   let manifest = std::env::var("CARGO_MANIFEST_DIR").unwrap();
-  let workspace = format!("{manifest}/../..");
+  let workspace = format!("{manifest}/../../..");
 
   let lean_out = std::process::Command::new("lean")
     .arg("--print-prefix")

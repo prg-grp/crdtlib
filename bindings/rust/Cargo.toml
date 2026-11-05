@@ -1,8 +1,0 @@
-[package]
-name = "crdtlib"
-version = "0.1.0"
-edition = "2024"
-license = "Apache-2.0"
-
-[build-dependencies]
-pkg-config = "0.3"

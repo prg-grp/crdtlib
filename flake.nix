@@ -42,8 +42,8 @@
           packages = {
             bindings-rust = craneLib.buildPackage {
               src = craneLib.cleanCargoSource ./.;
-              cargoExtraArgs = "-p crdtlib";
-              pname = "crdtlib";
+              cargoExtraArgs = "-p crdtlib-bindings";
+              pname = "crdtlib-bindings";
             };
           };
           devShells = rec {

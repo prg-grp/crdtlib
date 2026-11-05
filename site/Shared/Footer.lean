@@ -42,7 +42,7 @@ def footer : Html := {{
           {{ footerLink "Repository" repoUrl }}
           {{ footerLink "Publications" "/publications/" }}
           {{ footerLink "Artifact" s!"https://doi.org/{paper.artifactDoi}" }}
-          {{ footerLink "Rust bindings" s!"{repoUrl}/tree/master/bindings/rust" }}
+          {{ footerLink "Rust bindings" s!"{repoUrl}/tree/master/lang/rust/bindings" }}
           {{ footerLink "Issues" s!"{repoUrl}/issues" }}
         </ul>
       </nav>
