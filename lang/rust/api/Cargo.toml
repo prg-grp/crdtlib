@@ -1,0 +1,8 @@
+[package]
+name = "crdtlib-api"
+description = "CRDT traits"
+version.workspace = true
+edition = "2024"
+license = "Apache-2.0"
+
+[dependencies]
