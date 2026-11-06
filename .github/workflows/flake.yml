@@ -1,0 +1,98 @@
+# Checks everything in the flake, on every system it supports: the checks (fmt, clippy, tests and
+# docs of the Rust crates that build without Lean), the dev shells, and the Verus and Prusti
+# packages. A second job runs the Verus and Prusti proofs in `lang/rust/{verus,prusti}`, which need
+# the rustup toolchains those tools pin and so cannot run in the Nix sandbox.
+#
+# Not built: the `bindings-rust` package, whose build script needs Lean and the shared libraries
+# `lake` builds, neither of which the sandbox has.
+
+name: Flake
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: flake-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - system: x86_64-linux
+            runner: ubuntu-24.04
+          - system: aarch64-linux
+            runner: ubuntu-24.04-arm
+          - system: aarch64-darwin
+            runner: macos-15
+    name: check (${{ matrix.system }})
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: cachix/install-nix-action@v31
+
+      - name: Check the flake
+        run: nix flake check --print-build-logs
+
+      - name: Build the dev shells
+        run: |
+          nix build --print-build-logs --no-link \
+            .#devShells.${{ matrix.system }}.default \
+            .#devShells.${{ matrix.system }}.bindings-rust
+
+      - name: Build Verus and Prusti
+        if: matrix.system == 'aarch64-darwin'
+        run: nix build --print-build-logs --no-link .#verus .#prusti
+
+  proofs:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: cachix/install-nix-action@v31
+
+      - name: Install the toolchains Verus and Prusti pin
+        run: |
+          rustup toolchain install 1.99.1 --profile minimal --component rust-src
+          rustup toolchain install nightly-2026-08-15 --profile minimal
+
+      # The `rejected*` examples must fail, and in verification rather than in compilation.
+
+      - name: Verify with Verus
+        working-directory: lang/rust/verus
+        shell: nix develop ../../.. --command bash -euo pipefail {0}
+        run: |
+          cargo verus verify
+          cargo verus verify --example lww
+          for example in rejected rejected_map_state; do
+            if out=$(cargo verus verify --example "$example" 2>&1); then
+              echo "::error::Verus accepted examples/$example.rs, which it should reject"
+              exit 1
+            fi
+            grep -q "verification results:: .*[1-9][0-9]* errors" <<< "$out" \
+              || { echo "$out"; echo "::error::examples/$example.rs failed, but not in verification"; exit 1; }
+          done
+
+      - name: Verify with Prusti
+        working-directory: lang/rust/prusti
+        shell: nix develop ../../.. --command bash -euo pipefail {0}
+        run: |
+          cargo prusti
+          cargo prusti --example lww
+          for example in rejected rejected_map_state; do
+            if out=$(cargo prusti --example "$example" 2>&1); then
+              echo "::error::Prusti accepted examples/$example.rs, which it should reject"
+              exit 1
+            fi
+            grep -q "\[Prusti: verification error\]" <<< "$out" \
+              || { echo "$out"; echo "::error::examples/$example.rs failed, but not in verification"; exit 1; }
+          done

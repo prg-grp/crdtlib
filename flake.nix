@@ -4,6 +4,7 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     flake-parts.url = "github:hercules-ci/flake-parts";
+    import-tree.url = "github:vic/import-tree";
     crane.url = "github:ipetkov/crane";
     rust-overlay = {
       url = "github:oxalica/rust-overlay";
@@ -12,56 +13,5 @@
   };
 
   outputs =
-    inputs@{
-      self,
-      nixpkgs,
-      flake-parts,
-      crane,
-      rust-overlay,
-      ...
-    }:
-    flake-parts.lib.mkFlake { inherit inputs; } {
-      systems = [
-        "aarch64-darwin"
-        "aarch64-linux"
-        "x86_64-darwin"
-        "x86_64-linux"
-      ];
-
-      perSystem =
-        { system, pkgs, ... }:
-        let
-          rustPkgs = import nixpkgs {
-            inherit system;
-            overlays = [ (import rust-overlay) ];
-          };
-
-          craneLib = (crane.mkLib rustPkgs).overrideToolchain (p: p.rust-bin.stable.latest.default);
-        in
-        {
-          packages = {
-            bindings-rust = craneLib.buildPackage {
-              src = craneLib.cleanCargoSource ./.;
-              cargoExtraArgs = "-p crdtlib-bindings";
-              pname = "crdtlib-bindings";
-            };
-          };
-          devShells = rec {
-            bindings-rust = craneLib.devShell {
-              checks = self.checks.${system};
-            };
-
-            default = pkgs.mkShell {
-              inputsFrom = [ bindings-rust ];
-              packages = with pkgs; [
-                elan
-                pkg-config
-                gmp
-                libuv
-                clang
-              ];
-            };
-          };
-        };
-    };
+    inputs: inputs.flake-parts.lib.mkFlake { inherit inputs; } (inputs.import-tree ./nix/modules);
 }
