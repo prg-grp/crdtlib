@@ -1,0 +1,19 @@
+[package]
+name = "crdtlib-verus"
+version = "0.1.0"
+edition = "2021"
+license = "Apache-2.0"
+description = "Verus proofs of the `ac_fun` and `map_state` laws, for the native Rust crdtlib"
+
+[dependencies]
+vstd = "=0.0.0-2026-10-25-0158"
+
+[package.metadata.verus]
+verify = true
+
+[lints.rust]
+# Lets ghost-only imports be guarded with `#[cfg(verus_only)]`, which Verus sets when verifying.
+unexpected_cfgs = { level = "warn", check-cfg = ['cfg(verus_only)'] }
+
+# Verified separately from the main workspace: `vstd` is built by Verus's pinned toolchain.
+[workspace]
