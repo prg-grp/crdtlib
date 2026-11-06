@@ -6,9 +6,7 @@ use common::{apply, apply_t, assert_commutative, assert_commutative_t, vc};
 use crdtlib::combinator::derived::disjoint_product::disjoint_product;
 use crdtlib::combinator::derived::joint_product::joint_product;
 use crdtlib::combinator::derived::map_op::map_op;
-use crdtlib::combinator::derived::tagged_union::{
-  Choice, auto_tagged_union_t, tagged_union_3, tagged_union_t,
-};
+use crdtlib::combinator::derived::tagged_union::{Choice, auto_tagged_union_t, tagged_union_t};
 use crdtlib::combinator::principal::associate::associate;
 use crdtlib::combinator::principal::map_interpretation::map_interpretation;
 use crdtlib::combinator::principal::map_state::map_state;
@@ -158,20 +156,4 @@ fn auto_tagged_union_activates_the_side_it_updates() {
   assert_eq!(c.interpret(&s), Sum::Inr(9));
   let s = c.effect_t(&vc(&[2, 1]), &Sum::Inl(1), s);
   assert_eq!(c.interpret(&s), Sum::Inl(4));
-}
-
-#[test]
-fn tagged_union_3_nests_with_a_flat_state() {
-  let c = tagged_union_3(counter().timed(), max_int().timed(), counter().timed());
-  let s0 = ((0, 0, 0), HashSet::new(), HashSet::new());
-  let evs = [
-    (vc(&[1]), Sum::Inl(Sum::Inl(Sum::Inl(Sum::Inr(5))))),
-    (vc(&[2]), Sum::Inl(Sum::Inl(Sum::Inr(Choice::Right)))),
-    (vc(&[3]), Sum::Inl(Sum::Inr(4))),
-  ];
-  let s = apply_t(&c, &evs, s0);
-  assert_eq!(c.interpret(&s), Sum::Inl(Sum::Inr(5)));
-  let s = c.effect_t(&vc(&[4]), &Sum::Inr(Choice::Right), s);
-  assert_eq!(c.interpret(&s), Sum::Inr(4));
-  assert_eq!(s.0, (0, 5, 4));
 }

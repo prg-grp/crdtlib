@@ -3,7 +3,6 @@ use std::hash::Hash;
 
 use crate::combinator::derived::disjoint_product::disjoint_product;
 use crate::combinator::principal::map_interpretation::map_interpretation;
-use crate::combinator::principal::map_state::map_state;
 use crate::combinator::principal::traverse::traverse;
 use crate::crdt::stdlib::lww::mv_lww_t;
 use crdtlib_api::{CrdtT, Event, Sum};
