@@ -112,7 +112,7 @@ JSON tree CRDT as expressive as Automerge, are in the paper's artifact
   - `api/`: `crdtlib-api`, CRDT traits shared by bindings and lib
   - `lib/`: `crdtlib`, primitives and combinators reimplemented in Rust, for building CRDTs in Rust
   - `bindings/`: `crdtlib-bindings`, the Rust FFI bindings for CRDTs implemented in Lean
-  - `verus/`: support for proofs of `ac_fun` and `map_state` laws in Verus
+  - `verus/`, `prusti/`: support for proofs of `ac_fun` and `map_state` laws in Verus and Prusti
 - `site/`: the website and documentation (see `site/README.md`)
 - `assets/`: the logo (`logo.svg`, and `logo-dark.svg` for dark backgrounds), icons and drawings
 

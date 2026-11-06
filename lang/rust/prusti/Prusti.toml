@@ -1,0 +1,2 @@
+# `cargo prusti` verifies and then builds (into target/verify), instead of only checking.
+cargo_command = "build"

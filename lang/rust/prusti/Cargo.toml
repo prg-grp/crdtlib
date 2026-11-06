@@ -1,0 +1,15 @@
+[package]
+name = "crdtlib-prusti"
+version = "0.1.0"
+edition = "2021"
+license = "Apache-2.0"
+description = "Prusti proofs of the `ac_fun` and `map_state` laws, for the native Rust crdtlib"
+
+[dependencies]
+prusti-contracts = "=0.3.2"
+
+[lints.rust]
+unexpected_cfgs = { level = "warn", check-cfg = ['cfg(prusti)'] }
+
+# Verified separately from the main workspace, with Prusti's pinned nightly toolchain.
+[workspace]
